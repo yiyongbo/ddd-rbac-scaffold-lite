@@ -1,5 +1,7 @@
 package io.github.yiyongbo.scaffold.common.response;
 
+import io.github.yiyongbo.scaffold.common.error.CommonResponseCode;
+import io.github.yiyongbo.scaffold.common.error.ResponseCode;
 import lombok.*;
 
 import java.io.Serial;
@@ -36,11 +38,19 @@ public class Result<T> implements Serializable {
     private T data;
 
     public static <T> Result<T> success() {
-        return new Result<>("00000", "success", null);
+        return new Result<>(CommonResponseCode.SUCCESS.getCode(), CommonResponseCode.SUCCESS.getMessage(), null);
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<>("00000", "success", data);
+        return new Result<>(CommonResponseCode.SUCCESS.getCode(), CommonResponseCode.SUCCESS.getMessage(), data);
+    }
+
+    public static <T> Result<T> fail(ResponseCode code) {
+        return new Result<>(code.getCode(), code.getMessage(), null);
+    }
+
+    public static <T> Result<T> fail(ResponseCode code, String message) {
+        return new Result<>(code.getCode(), message, null);
     }
 
     public static <T> Result<T> fail(String code, String message) {
