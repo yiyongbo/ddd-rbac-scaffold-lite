@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.common.error;
+package io.github.yiyongbo.scaffold.common.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

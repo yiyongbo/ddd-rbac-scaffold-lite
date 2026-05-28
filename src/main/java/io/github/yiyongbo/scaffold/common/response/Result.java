@@ -1,7 +1,5 @@
 package io.github.yiyongbo.scaffold.common.response;
 
-import io.github.yiyongbo.scaffold.common.error.CommonResponseCode;
-import io.github.yiyongbo.scaffold.common.error.ResponseCode;
 import lombok.*;
 
 import java.io.Serial;

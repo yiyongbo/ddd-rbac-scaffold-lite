@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.common.error;
+package io.github.yiyongbo.scaffold.common.response;
 
 /**
  * 响应码接口
