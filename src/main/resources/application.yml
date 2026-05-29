@@ -12,3 +12,7 @@ spring:
     time-zone: Asia/Shanghai
     date-format: yyyy-MM-dd HH:mm:ss
     default-property-inclusion: non_null
+
+logging:
+  file:
+    path: ./logs

@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 日志级别从低到高：TRACE < DEBUG < INFO < WARN < ERROR -->
-<configuration scan="true" scanPeriod="10 seconds">
-
+<configuration>
     <contextName>ddd-rbac-scaffold-lite</contextName>
 
     <!-- 从 Spring Boot 配置中读取 logging.file.path -->
     <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="./logs"/>
 
-    <!-- 日志格式 -->
+    <!-- 控制台日志颜色支持 -->
     <conversionRule conversionWord="clr" class="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex" class="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <!-- 异常堆栈格式化 -->
     <conversionRule conversionWord="wEx" class="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %clr(%-5level) %logger{36} %X{ServiceId} -%X{trace-id} %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %clr(%-5level) %logger{36} traceId=%X{traceId} - %msg%n%wEx</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
     <!-- INFO 文件输出：INFO 及以上 -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/log_info.log</file>
+        <file>${LOG_PATH}/app-info.log</file>
 
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} %X{ServiceId} -%X{trace-id} %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} traceId=%X{traceId} - %msg%n%wEx</pattern>
             <charset>UTF-8</charset>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/app-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>15</maxHistory>
             <totalSizeCap>10GB</totalSizeCap>
@@ -44,24 +40,26 @@
         </filter>
     </appender>
 
-    <!-- ERROR 文件输出：WARN 及以上 -->
+    <!-- ERROR 文件输出：ERROR -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/log_error.log</file>
+        <file>${LOG_PATH}/app-error.log</file>
 
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} %X{ServiceId} -%X{trace-id} %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} traceId=%X{traceId} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/app-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>7</maxHistory>
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
 
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>WARN</level>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
@@ -78,29 +76,10 @@
     <appender name="ASYNC_ERROR" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>1024</queueSize>
         <discardingThreshold>0</discardingThreshold>
-        <neverBlock>true</neverBlock>
+        <neverBlock>false</neverBlock>
         <includeCallerData>false</includeCallerData>
         <appender-ref ref="ERROR_FILE"/>
     </appender>
-
-    <!-- 开发环境 -->
-    <springProfile name="dev">
-        <logger name="io.github.yiyongbo.scaffold" level="DEBUG"/>
-        <logger name="org.springframework" level="INFO"/>
-        <logger name="com.baomidou.mybatisplus" level="INFO"/>
-    </springProfile>
-
-    <!-- 测试环境 -->
-    <springProfile name="test">
-        <logger name="io.github.yiyongbo.scaffold" level="INFO"/>
-        <logger name="org.springframework" level="INFO"/>
-    </springProfile>
-
-    <!-- 生产环境 -->
-    <springProfile name="prod">
-        <logger name="io.github.yiyongbo.scaffold" level="INFO"/>
-        <logger name="org.springframework" level="WARN"/>
-    </springProfile>
 
     <!-- 根日志 -->
     <root level="INFO">

@@ -2,3 +2,4 @@ logging:
   level:
     root: info
     io.github.yiyongbo.scaffold: debug
+    org.springframework: info
