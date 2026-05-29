@@ -1,3 +1,16 @@
+app:
+  async:
+    biz:
+      core-pool-size: 4
+      max-pool-size: 8
+      queue-capacity: 500
+      keep-alive-seconds: 60
+      thread-name-prefix: biz-executor-
+      await-termination-seconds: 30
+      wait-for-tasks-to-complete-on-shutdown: true
+      # 任务拒绝策略：abort、discard、discard-oldest、caller-runs
+      rejected-policy: caller-runs
+
 springdoc:
   api-docs:
     enabled: true
