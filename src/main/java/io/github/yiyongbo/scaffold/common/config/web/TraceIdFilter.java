@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,6 +18,9 @@ import java.util.UUID;
 
 /**
  * TraceId 过滤器
+ *
+ * @author kidd
+ * @since 2026/5/29 11:16
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -25,7 +29,7 @@ public class TraceIdFilter extends OncePerRequestFilter {
     private static final int MAX_TRACE_ID_LENGTH = 64;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String traceId = getOrCreateTraceId(request);
 
         try {

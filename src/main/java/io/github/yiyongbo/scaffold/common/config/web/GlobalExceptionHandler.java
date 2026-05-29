@@ -16,6 +16,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
@@ -125,6 +127,26 @@ public class GlobalExceptionHandler {
         log.warn("请求媒体类型不支持：request={}, contentType={}，supportedMediaTypes={}", requestInfo(request), ex.getContentType(), ex.getSupportedMediaTypes());
 
         return Result.fail(CommonResponseCode.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    /**
+     * 处理静态资源不存在异常
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {
+        log.debug("请求资源不存在：request={}, resourcePath={}", requestInfo(request), ex.getResourcePath());
+
+        return Result.fail(CommonResponseCode.NOT_FOUND);
+    }
+
+    /**
+     * 处理请求路径不存在异常
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public Result<Void> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
+        log.debug("请求路径不存在：request={}, url={}", requestInfo(request), ex.getRequestURL());
+
+        return Result.fail(CommonResponseCode.NOT_FOUND);
     }
 
     /**
