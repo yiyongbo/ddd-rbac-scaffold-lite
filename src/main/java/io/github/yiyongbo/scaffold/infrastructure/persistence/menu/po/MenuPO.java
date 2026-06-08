@@ -1,0 +1,73 @@
+package io.github.yiyongbo.scaffold.infrastructure.persistence.menu.po;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.github.yiyongbo.scaffold.common.base.BasePO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 系统菜单权限持久化对象
+ *
+ * @author kidd
+ * @since 2026/6/8 23:11
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("sys_menu")
+public class MenuPO extends BasePO {
+
+    /**
+     * 父级菜单ID，0表示根节点
+     */
+    private Long parentId;
+
+    /**
+     * 菜单名称
+     */
+    private String menuName;
+
+    /**
+     * 菜单类型：1目录，2菜单，3按钮
+     */
+    private Integer menuType;
+
+    /**
+     * 路由路径，例如 /system/user
+     */
+    private String routePath;
+
+    /**
+     * 组件路径，例如 system/user/index
+     */
+    private String component;
+
+    /**
+     * 权限标识，例如 system:user:create
+     */
+    private String permissionCode;
+
+    /**
+     * 菜单图标
+     */
+    private String icon;
+
+    /**
+     * 排序值，越小越靠前
+     */
+    private Integer sort;
+
+    /**
+     * 是否可见：1是，0否
+     */
+    private Integer visible;
+
+    /**
+     * 是否启用：1是，0否
+     */
+    private Integer enable;
+
+    /**
+     * 备注
+     */
+    private String remark;
+}
