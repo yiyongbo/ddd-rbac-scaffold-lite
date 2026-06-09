@@ -23,24 +23,24 @@ public interface MenuAssembler {
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "codeToYesNo")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuCreateCmd cmd);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "codeToYesNo")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuUpdateCmd cmd);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "yesNoToCode")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuDTO toDTO(MenuEntity entity);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "yesNoToCode")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuTreeDTO toTreeDTO(MenuEntity entity);
 
     @Named("codeToMenuType")

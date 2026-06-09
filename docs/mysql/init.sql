@@ -10,7 +10,7 @@ CREATE TABLE sys_menu (
     icon            VARCHAR(64)          DEFAULT NULL COMMENT '菜单图标',
     sort            INT         NOT NULL DEFAULT 0 COMMENT '排序值，越小越靠前',
     visible         TINYINT     NOT NULL DEFAULT 1 COMMENT '是否可见：1是，0否',
-    enable          TINYINT     NOT NULL DEFAULT 1 COMMENT '是否启用：1是，0否',
+    enabled          TINYINT     NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
     remark          VARCHAR(255)         DEFAULT NULL COMMENT '备注',
     created_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -19,7 +19,7 @@ CREATE TABLE sys_menu (
     UNIQUE KEY uk_permission_code (permission_code),
     KEY idx_parent_id (parent_id),
     KEY idx_menu_type (menu_type),
-    KEY idx_enable (enable),
+    KEY idx_enabled (enabled),
     KEY idx_sort (sort)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='系统菜单权限表';

@@ -69,9 +69,9 @@ public class MenuDTO {
     private Integer visible;
 
     /**
-     * 是否启用：1是，0否
+     * 是否已启用：1是，0否
      */
-    private Integer enable;
+    private Integer enabled;
 
     /**
      * 备注

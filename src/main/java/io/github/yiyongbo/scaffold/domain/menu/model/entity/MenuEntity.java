@@ -66,9 +66,9 @@ public class MenuEntity {
     private YesNoEnum visible;
 
     /**
-     * 是否启用：1是，0否
+     * 是否已启用：1是，0否
      */
-    private YesNoEnum enable;
+    private YesNoEnum enabled;
 
     /**
      * 备注

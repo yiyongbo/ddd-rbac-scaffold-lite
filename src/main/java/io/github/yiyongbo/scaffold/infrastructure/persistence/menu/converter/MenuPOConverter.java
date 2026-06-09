@@ -21,12 +21,12 @@ public interface MenuPOConverter {
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "yesNoToCode")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuPO toPO(MenuEntity entity);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
-    @Mapping(target = "enable", source = "enable", qualifiedByName = "codeToYesNo")
+    @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuPO po);
 
     @Named("menuTypeToCode")
