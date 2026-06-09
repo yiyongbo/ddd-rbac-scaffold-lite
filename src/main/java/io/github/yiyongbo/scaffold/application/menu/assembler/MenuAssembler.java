@@ -2,6 +2,8 @@ package io.github.yiyongbo.scaffold.application.menu.assembler;
 
 import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCmd;
 import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
+import io.github.yiyongbo.scaffold.application.menu.dto.MenuDTO;
+import io.github.yiyongbo.scaffold.application.menu.dto.MenuTreeDTO;
 import io.github.yiyongbo.scaffold.common.enums.EnumUtils;
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
 import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
@@ -29,6 +31,18 @@ public interface MenuAssembler {
     @Mapping(target = "enable", source = "enable", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuUpdateCmd cmd);
 
+    @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
+    @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
+    @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
+    @Mapping(target = "enable", source = "enable", qualifiedByName = "yesNoToCode")
+    MenuDTO toDTO(MenuEntity entity);
+
+    @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
+    @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
+    @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
+    @Mapping(target = "enable", source = "enable", qualifiedByName = "yesNoToCode")
+    MenuTreeDTO toTreeDTO(MenuEntity entity);
+
     @Named("codeToMenuType")
     default MenuTypeEnum codeToMenuType(Integer code) {
         return EnumUtils.getByCode(MenuTypeEnum.class, code);
@@ -37,6 +51,21 @@ public interface MenuAssembler {
     @Named("codeToYesNo")
     default YesNoEnum codeToYesNo(Integer code) {
         return EnumUtils.getByCode(YesNoEnum.class, code);
+    }
+
+    @Named("menuTypeToCode")
+    default Integer menuTypeToCode(MenuTypeEnum menuType) {
+        return menuType == null ? null : menuType.getCode();
+    }
+
+    @Named("menuTypeToDesc")
+    default String menuTypeToDesc(MenuTypeEnum menuType) {
+        return menuType == null ? null : menuType.getDesc();
+    }
+
+    @Named("yesNoToCode")
+    default Integer yesNoToCode(YesNoEnum yesNo) {
+        return yesNo == null ? null : yesNo.getCode();
     }
 
 }

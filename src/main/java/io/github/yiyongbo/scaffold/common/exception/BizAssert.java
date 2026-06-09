@@ -1,6 +1,5 @@
 package io.github.yiyongbo.scaffold.common.exception;
 
-import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.response.ResponseCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,15 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BizAssert {
 
+    public static BizException newException(ResponseCode responseCode, String message) {
+        return new BizException(responseCode, message);
+    }
+
     public static void isTrue(boolean expression, ResponseCode responseCode, String message) {
         if (!expression) {
             throw new BizException(responseCode, message);
-        }
-    }
-
-    public static void notNull(Object object, String message) {
-        if (object == null) {
-            throw new BizException(CommonResponseCode.NOT_FOUND, message);
         }
     }
 
