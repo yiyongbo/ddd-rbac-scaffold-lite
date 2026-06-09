@@ -14,12 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BizAssert {
 
-    public static void isTrue(boolean expression, ResponseCode responseCode) {
-        if (!expression) {
-            throw new BizException(responseCode);
-        }
-    }
-
     public static void isTrue(boolean expression, ResponseCode responseCode, String message) {
         if (!expression) {
             throw new BizException(responseCode, message);
