@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.repository;
+package io.github.yiyongbo.scaffold.infrastructure.menu.repository;
 
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
 import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
@@ -17,7 +17,7 @@ import java.util.Optional;
  * @since 2026/6/8 23:52
  */
 @SpringBootTest
-public class MenuRepositoryTests {
+public class MenuRepositoryTest {
 
     @Autowired
     private MenuRepository menuRepository;

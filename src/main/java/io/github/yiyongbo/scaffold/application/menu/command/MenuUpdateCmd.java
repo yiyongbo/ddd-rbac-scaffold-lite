@@ -1,19 +1,15 @@
-package io.github.yiyongbo.scaffold.domain.menu.model.entity;
+package io.github.yiyongbo.scaffold.application.menu.command;
 
-import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
-import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
- * 系统菜单领域实体
+ * 更新系统菜单命令
  *
  * @author kidd
- * @since 2026/6/8 23:28
+ * @since 2026/6/9 10:43
  */
 @Data
-public class MenuEntity {
+public class MenuUpdateCmd {
 
     /**
      * 菜单ID
@@ -33,7 +29,7 @@ public class MenuEntity {
     /**
      * 菜单类型：1目录，2菜单，3按钮
      */
-    private MenuTypeEnum menuType;
+    private Integer menuType;
 
     /**
      * 路由路径，例如 /system/user
@@ -63,25 +59,16 @@ public class MenuEntity {
     /**
      * 是否可见：1是，0否
      */
-    private YesNoEnum visible;
+    private Integer visible;
 
     /**
      * 是否启用：1是，0否
      */
-    private YesNoEnum enable;
+    private Integer enable;
 
     /**
      * 备注
      */
     private String remark;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdAt;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updatedAt;
 }
