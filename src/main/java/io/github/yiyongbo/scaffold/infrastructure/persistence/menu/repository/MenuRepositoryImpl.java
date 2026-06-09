@@ -3,7 +3,7 @@ package io.github.yiyongbo.scaffold.infrastructure.persistence.menu.repository;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
 import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
-import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.converter.MenuPOConverter;
+import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.assembler.MenuPersistenceAssembler;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.mapper.MenuMapper;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.po.MenuPO;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +24,18 @@ public class MenuRepositoryImpl implements MenuRepository {
 
     private final MenuMapper menuMapper;
 
-    private final MenuPOConverter menuPOConverter;
+    private final MenuPersistenceAssembler menuPersistenceAssembler;
 
     @Override
     public Long save(MenuEntity menu) {
-        MenuPO menuPO = menuPOConverter.toPO(menu);
+        MenuPO menuPO = menuPersistenceAssembler.toPO(menu);
         menuMapper.insert(menuPO);
         return menuPO.getId();
     }
 
     @Override
     public void updateById(MenuEntity menu) {
-        MenuPO menuPO = menuPOConverter.toPO(menu);
+        MenuPO menuPO = menuPersistenceAssembler.toPO(menu);
         menuMapper.updateById(menuPO);
     }
 
@@ -47,7 +47,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     @Override
     public Optional<MenuEntity> findById(Long id) {
         MenuPO menuPO = menuMapper.selectById(id);
-        return Optional.ofNullable(menuPOConverter.toEntity(menuPO));
+        return Optional.ofNullable(menuPersistenceAssembler.toEntity(menuPO));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class MenuRepositoryImpl implements MenuRepository {
                 .eq(MenuPO::getPermissionCode, permissionCode);
 
         MenuPO menuPO = menuMapper.selectOne(wrapper);
-        return Optional.ofNullable(menuPOConverter.toEntity(menuPO));
+        return Optional.ofNullable(menuPersistenceAssembler.toEntity(menuPO));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 
         return menuMapper.selectList(wrapper)
                 .stream()
-                .map(menuPOConverter::toEntity)
+                .map(menuPersistenceAssembler::toEntity)
                 .toList();
     }
 

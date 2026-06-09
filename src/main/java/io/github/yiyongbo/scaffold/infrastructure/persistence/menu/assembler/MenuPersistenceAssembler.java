@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.infrastructure.persistence.menu.converter;
+package io.github.yiyongbo.scaffold.infrastructure.persistence.menu.assembler;
 
 import io.github.yiyongbo.scaffold.common.enums.EnumUtils;
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
@@ -16,7 +16,7 @@ import org.mapstruct.Named;
  * @since 2026/6/8 23:19
  */
 @Mapper(componentModel = "spring")
-public interface MenuPOConverter {
+public interface MenuPersistenceAssembler {
 
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
