@@ -1,10 +1,14 @@
 package io.github.yiyongbo.scaffold.domain.menu.model.entity;
 
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
+import io.github.yiyongbo.scaffold.common.exception.BizAssert;
+import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.domain.menu.constants.MenuConstants;
 import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 系统菜单领域实体
@@ -84,4 +88,12 @@ public class MenuEntity {
      * 更新时间
      */
     private LocalDateTime updatedAt;
+
+    public boolean isRootMenu() {
+        return MenuConstants.ROOT_PARENT_ID.equals(this.parentId);
+    }
+
+    public void validateParentNotSelf() {
+        BizAssert.isTrue(!Objects.equals(this.id, this.parentId), CommonResponseCode.USER_ERROR, "父级菜单不能是当前菜单");
+    }
 }

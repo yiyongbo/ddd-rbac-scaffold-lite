@@ -1,7 +1,7 @@
 package io.github.yiyongbo.scaffold.application.menu.service;
 
 import cn.hutool.core.collection.CollUtil;
-import io.github.yiyongbo.scaffold.application.menu.assembler.MenuAssembler;
+import io.github.yiyongbo.scaffold.application.menu.assembler.MenuAppAssembler;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuDTO;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuTreeDTO;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
@@ -31,7 +31,7 @@ public class MenuQueryService {
 
     private final MenuRepository menuRepository;
 
-    private final MenuAssembler menuAssembler;
+    private final MenuAppAssembler menuAppAssembler;
 
     /**
      * 根据ID查询菜单详情
@@ -46,7 +46,7 @@ public class MenuQueryService {
         MenuEntity menu = menuRepository.findById(id)
                 .orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "菜单不存在"));
 
-        return menuAssembler.toDTO(menu);
+        return menuAppAssembler.toDTO(menu);
     }
 
     /**
@@ -59,7 +59,7 @@ public class MenuQueryService {
         List<MenuEntity> menuList = menuRepository.findAll();
 
         List<MenuTreeDTO> treeNodeList = menuList.stream()
-                .map(menuAssembler::toTreeDTO)
+                .map(menuAppAssembler::toTreeDTO)
                 .sorted(Comparator.comparing(MenuTreeDTO::getSort, Comparator.nullsLast(Integer::compareTo))
                         .thenComparing(MenuTreeDTO::getId, Comparator.nullsLast(Long::compareTo)))
                 .toList();

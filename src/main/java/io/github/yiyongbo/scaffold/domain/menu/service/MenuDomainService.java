@@ -3,7 +3,6 @@ package io.github.yiyongbo.scaffold.domain.menu.service;
 import cn.hutool.core.util.StrUtil;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
-import io.github.yiyongbo.scaffold.domain.menu.constants.MenuConstants;
 import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
 import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class MenuDomainService {
     public void validateCreate(MenuEntity menu) {
         BizAssert.notNull(menu, CommonResponseCode.PARAM_ERROR, "菜单不能为空");
 
-        validateParent(menu.getParentId());
+        validateParent(menu);
         validatePermissionCodeUnique(null, menu.getPermissionCode());
     }
 
@@ -48,9 +47,9 @@ public class MenuDomainService {
         boolean existsMenu = menuRepository.existsById(menu.getId());
         BizAssert.isTrue(existsMenu, CommonResponseCode.NOT_FOUND, "菜单不存在");
 
-        BizAssert.isTrue(!Objects.equals(menu.getId(), menu.getParentId()), CommonResponseCode.USER_ERROR, "父级菜单不能是当前菜单");
+        menu.validateParentNotSelf();
 
-        validateParent(menu.getParentId());
+        validateParent(menu);
         validatePermissionCodeUnique(menu.getId(), menu.getPermissionCode());
     }
 
@@ -69,10 +68,11 @@ public class MenuDomainService {
         BizAssert.isTrue(!existsChildMenu, CommonResponseCode.USER_ERROR, "存在子菜单，不能删除");
     }
 
-    private void validateParent(Long parentId) {
+    private void validateParent(MenuEntity menu) {
+        Long parentId = menu.getParentId();
         BizAssert.notNull(parentId, CommonResponseCode.PARAM_ERROR, "父级菜单ID不能为空");
 
-        if (MenuConstants.ROOT_PARENT_ID.equals(parentId)) {
+        if (menu.isRootMenu()) {
             return;
         }
 
@@ -80,6 +80,10 @@ public class MenuDomainService {
         BizAssert.isTrue(existsParentMenu, CommonResponseCode.NOT_FOUND, "父级菜单不存在");
     }
 
+    /**
+     * 校验权限标识唯一性。
+     * 权限标识为空时不参与唯一性校验。
+     */
     private void validatePermissionCodeUnique(Long currentMenuId, String permissionCode) {
         if (StrUtil.isBlank(permissionCode)) {
             return;

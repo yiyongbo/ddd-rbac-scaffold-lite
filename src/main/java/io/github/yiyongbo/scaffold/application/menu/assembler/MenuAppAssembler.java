@@ -19,7 +19,7 @@ import org.mapstruct.Named;
  * @since 2026/6/9 10:46
  */
 @Mapper(componentModel = "spring")
-public interface MenuAssembler {
+public interface MenuAppAssembler {
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")

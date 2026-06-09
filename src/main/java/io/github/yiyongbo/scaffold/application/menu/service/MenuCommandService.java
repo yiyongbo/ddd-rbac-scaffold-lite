@@ -1,6 +1,6 @@
 package io.github.yiyongbo.scaffold.application.menu.service;
 
-import io.github.yiyongbo.scaffold.application.menu.assembler.MenuAssembler;
+import io.github.yiyongbo.scaffold.application.menu.assembler.MenuAppAssembler;
 import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCmd;
 import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
@@ -26,7 +26,7 @@ public class MenuCommandService {
 
     private final MenuDomainService menuDomainService;
 
-    private final MenuAssembler menuAssembler;
+    private final MenuAppAssembler menuAppAssembler;
 
     /**
      * 创建菜单
@@ -38,7 +38,7 @@ public class MenuCommandService {
     public Long create(MenuCreateCmd cmd) {
         BizAssert.notNull(cmd, CommonResponseCode.PARAM_ERROR, "创建菜单命令不能为空");
 
-        MenuEntity menu = menuAssembler.toEntity(cmd);
+        MenuEntity menu = menuAppAssembler.toEntity(cmd);
 
         menuDomainService.validateCreate(menu);
 
@@ -54,7 +54,7 @@ public class MenuCommandService {
     public void update(MenuUpdateCmd cmd) {
         BizAssert.notNull(cmd, CommonResponseCode.PARAM_ERROR, "更新菜单命令不能为空");
 
-        MenuEntity menu = menuAssembler.toEntity(cmd);
+        MenuEntity menu = menuAppAssembler.toEntity(cmd);
 
         menuDomainService.validateUpdate(menu);
 

@@ -1,5 +1,8 @@
 package io.github.yiyongbo.scaffold.adapter.web.menu.request;
 
+import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
+import io.github.yiyongbo.scaffold.common.validation.EnumValue;
+import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +29,7 @@ public class MenuCreateRequest {
     private String menuName;
 
     @NotNull(message = "菜单类型不能为空")
+    @EnumValue(enumClass = MenuTypeEnum.class, message = "菜单类型不合法")
     @Schema(description = "菜单类型：1目录，2菜单，3按钮", example = "2")
     private Integer menuType;
 
@@ -50,10 +54,12 @@ public class MenuCreateRequest {
     private Integer sort;
 
     @NotNull(message = "是否可见不能为空")
+    @EnumValue(enumClass = YesNoEnum.class, message = "是否可见不合法")
     @Schema(description = "是否可见：1是，0否", example = "1")
     private Integer visible;
 
     @NotNull(message = "状态不能为空")
+    @EnumValue(enumClass = YesNoEnum.class, message = "是否已启用不合法")
     @Schema(description = "是否已启用：1是，0否", example = "1")
     private Integer enabled;
 
