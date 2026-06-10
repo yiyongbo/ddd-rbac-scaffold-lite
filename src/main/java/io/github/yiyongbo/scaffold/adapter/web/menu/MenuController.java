@@ -72,11 +72,11 @@ public class MenuController {
 
     @Operation(summary = "查询菜单详情")
     @GetMapping("/{id}")
-    public Result<MenuResponse> getById(
+    public Result<MenuResponse> detail(
             @Parameter(description = "菜单ID", required = true, example = "1")
             @PathVariable Long id) {
 
-        MenuDTO menuDTO = menuQueryService.getById(id);
+        MenuDTO menuDTO = menuQueryService.detail(id);
         return Result.success(menuWebAssembler.toResponse(menuDTO));
     }
 

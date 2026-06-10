@@ -40,7 +40,7 @@ public class MenuQueryService {
      * @return 菜单详情
      */
     @Transactional(readOnly = true)
-    public MenuDTO getById(Long id) {
+    public MenuDTO detail(Long id) {
         BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
 
         MenuEntity menu = menuRepository.findById(id)
