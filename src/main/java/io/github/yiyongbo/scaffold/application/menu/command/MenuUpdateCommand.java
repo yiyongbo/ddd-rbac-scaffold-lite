@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2026/6/9 10:43
  */
 @Data
-public class MenuUpdateCmd {
+public class MenuUpdateCommand {
 
     /**
      * 菜单ID

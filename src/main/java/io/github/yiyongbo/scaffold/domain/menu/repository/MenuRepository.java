@@ -15,31 +15,46 @@ public interface MenuRepository {
 
     /**
      * 保存菜单
+     *
+     * @param menu 菜单信息
+     * @return 菜单ID
      */
     Long save(MenuEntity menu);
 
     /**
      * 根据ID更新菜单
+     *
+     * @param menu 菜单信息
      */
-    void updateById(MenuEntity menu);
+    void update(MenuEntity menu);
 
     /**
      * 根据ID删除菜单
+     *
+     * @param id 菜单ID
      */
-    void deleteById(Long id);
+    void delete(Long id);
 
     /**
      * 根据ID查询菜单
+     *
+      * @param id 菜单ID
+     * @return 菜单信息
      */
     Optional<MenuEntity> findById(Long id);
 
     /**
      * 根据权限标识查询菜单
+     *
+     * @param permissionCode 权限标识
+     * @return 菜单信息
      */
     Optional<MenuEntity> findByPermissionCode(String permissionCode);
 
     /**
      * 查询全部菜单
+     *
+     * @return 菜单信息
      */
     List<MenuEntity> findAll();
 

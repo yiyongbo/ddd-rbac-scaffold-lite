@@ -1,7 +1,7 @@
 package io.github.yiyongbo.scaffold.application.menu.service;
 
-import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCmd;
-import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCommand;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,7 @@ public class MenuCommandServiceTest {
 
     @Test
     void testCreateAndUpdateAndDelete() {
-        MenuCreateCmd createCmd = new MenuCreateCmd();
+        MenuCreateCommand createCmd = new MenuCreateCommand();
         createCmd.setParentId(0L);
         createCmd.setMenuName("系统管理");
         createCmd.setMenuType(1);
@@ -30,12 +30,12 @@ public class MenuCommandServiceTest {
         createCmd.setIcon("setting");
         createCmd.setSort(1);
         createCmd.setVisible(1);
-        createCmd.setEnable(1);
+        createCmd.setEnabled(1);
         createCmd.setRemark("系统管理目录");
 
         Long id = menuCommandService.create(createCmd);
 
-        MenuUpdateCmd updateCmd = new MenuUpdateCmd();
+        MenuUpdateCommand updateCmd = new MenuUpdateCommand();
         updateCmd.setId(id);
         updateCmd.setParentId(0L);
         updateCmd.setMenuName("系统管理-修改");
@@ -46,7 +46,7 @@ public class MenuCommandServiceTest {
         updateCmd.setIcon("setting");
         updateCmd.setSort(2);
         updateCmd.setVisible(1);
-        updateCmd.setEnable(1);
+        updateCmd.setEnabled(1);
         updateCmd.setRemark("系统管理目录-修改");
 
         menuCommandService.update(updateCmd);

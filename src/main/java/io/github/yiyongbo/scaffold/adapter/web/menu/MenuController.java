@@ -5,7 +5,7 @@ import io.github.yiyongbo.scaffold.adapter.web.menu.request.MenuCreateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.menu.request.MenuUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.menu.response.MenuResponse;
 import io.github.yiyongbo.scaffold.adapter.web.menu.response.MenuTreeResponse;
-import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCommand;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuDTO;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuTreeDTO;
 import io.github.yiyongbo.scaffold.application.menu.service.MenuCommandService;
@@ -43,7 +43,7 @@ public class MenuController {
     @Operation(summary = "创建菜单")
     @PostMapping
     public Result<Long> create(@Valid @RequestBody MenuCreateRequest request) {
-        Long id = menuCommandService.create(menuWebAssembler.toCreateCmd(request));
+        Long id = menuCommandService.create(menuWebAssembler.toCreateCommand(request));
         return Result.success(id);
     }
 
@@ -54,8 +54,7 @@ public class MenuController {
             @PathVariable Long id,
             @Valid @RequestBody MenuUpdateRequest request) {
 
-        MenuUpdateCmd updateCmd = menuWebAssembler.toUpdateCmd(request);
-        updateCmd.setId(id);
+        MenuUpdateCommand updateCmd = menuWebAssembler.toUpdateCommand(id, request);
 
         menuCommandService.update(updateCmd);
         return Result.success();

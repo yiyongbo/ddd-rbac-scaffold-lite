@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2026/6/9 10:43
  */
 @Data
-public class MenuCreateCmd {
+public class MenuCreateCommand {
 
     /**
      * 父级菜单ID，0表示根节点

@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
- * 菜单持久化对象转换器
+ * 菜单持久化对象装配器
  *
  * @author Kidd
  * @since 2026/6/8 23:19

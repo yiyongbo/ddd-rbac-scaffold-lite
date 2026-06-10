@@ -4,6 +4,7 @@ import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
 import io.github.yiyongbo.scaffold.common.validation.EnumValue;
 import io.github.yiyongbo.scaffold.domain.menu.enums.MenuTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -50,6 +51,7 @@ public class MenuCreateRequest {
     private String icon;
 
     @NotNull(message = "排序值不能为空")
+    @Min(value = 0, message = "排序值不能小于0")
     @Schema(description = "排序值，越小越靠前", example = "1")
     private Integer sort;
 

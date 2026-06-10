@@ -4,11 +4,12 @@ import io.github.yiyongbo.scaffold.adapter.web.menu.request.MenuCreateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.menu.request.MenuUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.menu.response.MenuResponse;
 import io.github.yiyongbo.scaffold.adapter.web.menu.response.MenuTreeResponse;
-import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCmd;
-import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCommand;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCommand;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuDTO;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuTreeDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -24,12 +25,13 @@ public interface MenuWebAssembler {
     /**
      * 创建请求转创建命令
      */
-    MenuCreateCmd toCreateCmd(MenuCreateRequest request);
+    MenuCreateCommand toCreateCommand(MenuCreateRequest request);
 
     /**
      * 更新请求转更新命令
      */
-    MenuUpdateCmd toUpdateCmd(MenuUpdateRequest request);
+    @Mapping(target = "id", source = "id")
+    MenuUpdateCommand toUpdateCommand(Long id, MenuUpdateRequest request);
 
     /**
      * 菜单 DTO 转响应

@@ -1,7 +1,7 @@
 package io.github.yiyongbo.scaffold.application.menu.assembler;
 
-import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCmd;
-import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCmd;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCommand;
+import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCommand;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuDTO;
 import io.github.yiyongbo.scaffold.application.menu.dto.MenuTreeDTO;
 import io.github.yiyongbo.scaffold.common.enums.EnumUtils;
@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
- * 系统菜单应用层装配器
+ * 系统菜单 Application 对象装配器
  *
  * @author kidd
  * @since 2026/6/9 10:46
@@ -24,12 +24,12 @@ public interface MenuAppAssembler {
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
-    MenuEntity toEntity(MenuCreateCmd cmd);
+    MenuEntity toEntity(MenuCreateCommand command);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
-    MenuEntity toEntity(MenuUpdateCmd cmd);
+    MenuEntity toEntity(MenuUpdateCommand command);
 
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")

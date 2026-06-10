@@ -34,13 +34,13 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     @Override
-    public void updateById(MenuEntity menu) {
+    public void update(MenuEntity menu) {
         MenuPO menuPO = menuPersistenceAssembler.toPO(menu);
         menuMapper.updateById(menuPO);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void delete(Long id) {
         menuMapper.deleteById(id);
     }
 
