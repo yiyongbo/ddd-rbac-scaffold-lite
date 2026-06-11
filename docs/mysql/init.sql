@@ -10,10 +10,10 @@ CREATE TABLE sys_menu (
     icon            VARCHAR(64)          DEFAULT NULL COMMENT '菜单图标',
     sort            INT         NOT NULL DEFAULT 0 COMMENT '排序值，越小越靠前',
     visible         TINYINT     NOT NULL DEFAULT 1 COMMENT '是否可见：1是，0否',
-    enabled          TINYINT     NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
+    enabled         TINYINT     NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
     remark          VARCHAR(255)         DEFAULT NULL COMMENT '备注',
-    created_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    updated_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    created_at      DATETIME    NOT NULL COMMENT '创建时间',
+    updated_at      DATETIME    NOT NULL COMMENT '更新时间',
     deleted         TINYINT     NOT NULL DEFAULT 0 COMMENT '逻辑删除：0未删除，1已删除',
     PRIMARY KEY (id),
     UNIQUE KEY uk_permission_code (permission_code),
@@ -23,3 +23,22 @@ CREATE TABLE sys_menu (
     KEY idx_sort (sort)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='系统菜单权限表';
+
+# 系统角色表
+CREATE TABLE sys_role (
+    id         BIGINT      NOT NULL COMMENT '主键ID',
+    role_code  VARCHAR(64) NOT NULL COMMENT '角色编码',
+    role_name  VARCHAR(64) NOT NULL COMMENT '角色名称',
+    enabled    TINYINT     NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
+    sort       INT         NOT NULL DEFAULT 0 COMMENT '排序值，值越小越靠前',
+    remark     VARCHAR(255)         DEFAULT NULL COMMENT '备注',
+    created_at DATETIME    NOT NULL COMMENT '创建时间',
+    updated_at DATETIME    NOT NULL COMMENT '更新时间',
+    deleted    TINYINT     NOT NULL DEFAULT 0 COMMENT '逻辑删除：0未删除，1已删除',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_role_code_deleted (role_code, deleted),
+    KEY idx_role_name (role_name),
+    KEY idx_enabled (enabled),
+    KEY idx_sort (sort)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='系统角色表';
