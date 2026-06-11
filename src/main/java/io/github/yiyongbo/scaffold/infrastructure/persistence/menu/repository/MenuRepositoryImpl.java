@@ -76,7 +76,11 @@ public class MenuRepositoryImpl implements MenuRepository {
         if (id == null) {
             return false;
         }
-        return menuMapper.selectById(id) != null;
+
+        Long count = menuMapper.selectCount(
+                new LambdaQueryWrapper<MenuPO>().eq(MenuPO::getId, id)
+        );
+        return count != null && count > 0;
     }
 
     @Override
