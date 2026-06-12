@@ -1,5 +1,6 @@
 package io.github.yiyongbo.scaffold.domain.menu.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
@@ -8,6 +9,7 @@ import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -93,5 +95,19 @@ public class MenuDomainService {
                 .filter(menu -> !Objects.equals(menu.getId(), currentMenuId))
                 .isPresent();
         BizAssert.isTrue(!existsSamePermissionCode, CommonResponseCode.USER_ERROR, "权限标识已存在");
+    }
+
+    /**
+     * 校验菜单存在
+     *
+     * @param menuIds 菜单ID列表
+     */
+    public void validateMenusExist(List<Long> menuIds) {
+        if (CollUtil.isEmpty(menuIds)) {
+            return;
+        }
+
+        boolean existsAll = menuRepository.existsAllByIds(menuIds);
+        BizAssert.isTrue(existsAll, CommonResponseCode.NOT_FOUND, "存在无效菜单");
     }
 }

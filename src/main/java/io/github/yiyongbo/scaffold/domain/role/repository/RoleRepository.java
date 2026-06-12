@@ -4,6 +4,7 @@ import io.github.yiyongbo.scaffold.common.page.PageResult;
 import io.github.yiyongbo.scaffold.domain.role.model.entity.RoleEntity;
 import io.github.yiyongbo.scaffold.domain.role.repository.query.RolePageCondition;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -67,4 +68,12 @@ public interface RoleRepository {
      * @return 角色信息
      */
     PageResult<RoleEntity> page(RolePageCondition condition);
+
+    /**
+     * 替换角色关联的菜单
+     *
+     * @param roleId  角色ID
+     * @param menuIds 菜单ID列表
+     */
+    void replaceRoleMenus(Long roleId, List<Long> menuIds);
 }

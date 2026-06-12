@@ -1,11 +1,23 @@
 package io.github.yiyongbo.scaffold.adapter.web.role;
 
-import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.github.yiyongbo.scaffold.adapter.web.role.assembler.RoleWebAssembler;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleCreateRequest;
+import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleMenuAssignRequest;
+import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RolePageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RoleResponse;
+import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.application.role.dto.RoleDTO;
@@ -20,8 +32,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 /**
  * 系统角色管理 Controller
@@ -53,8 +63,7 @@ public class RoleController {
     @Operation(summary = "更新角色")
     @PutMapping("/{id}")
     public Result<Void> update(
-            @Parameter(description = "角色ID", required = true, example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id,
             @Valid @RequestBody RoleUpdateRequest request) {
 
         RoleUpdateCommand updateCommand = roleWebAssembler.toUpdateCommand(id, request);
@@ -65,8 +74,7 @@ public class RoleController {
     @Operation(summary = "删除角色")
     @DeleteMapping("/{id}")
     public Result<Void> delete(
-            @Parameter(description = "角色ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
 
         roleCommandService.delete(id);
         return Result.success();
@@ -75,8 +83,7 @@ public class RoleController {
     @Operation(summary = "获取角色详情")
     @GetMapping("/{id}")
     public Result<RoleResponse> detail(
-            @Parameter(description = "角色ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
 
         RoleDTO role = roleQueryService.detail(id);
         return Result.success(roleWebAssembler.toResponse(role));
@@ -88,5 +95,17 @@ public class RoleController {
         RolePageQuery query = roleWebAssembler.toPageQuery(request);
         PageResult<RolePageDTO> page = roleQueryService.page(query);
         return Result.success(roleWebAssembler.toPageResponse(page));
+    }
+
+    @Operation(summary = "分配角色菜单权限")
+    @PostMapping("/{roleId}/menus")
+    public Result<Void> assignMenus(
+            @Parameter(description = "角色ID", required = true, example = "1")
+            @PathVariable Long roleId,
+            @Valid @RequestBody RoleMenuAssignRequest request) {
+
+        RoleAssignMenusCommand assignMenusCommand = roleWebAssembler.toAssignMenusCommand(roleId, request);
+        roleCommandService.assignMenus(assignMenusCommand);
+        return Result.success();
     }
 }

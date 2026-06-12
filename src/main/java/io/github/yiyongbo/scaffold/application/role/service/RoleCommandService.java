@@ -1,10 +1,12 @@
 package io.github.yiyongbo.scaffold.application.role.service;
 
 import io.github.yiyongbo.scaffold.application.role.assembler.RoleAppAssembler;
+import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
 import io.github.yiyongbo.scaffold.domain.role.model.entity.RoleEntity;
 import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
@@ -22,9 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RoleCommandService {
 
-    private final RoleRepository roleRepository;
-
     private final RoleDomainService roleDomainService;
+    private final MenuDomainService menuDomainService;
+
+    private final RoleRepository roleRepository;
 
     private final RoleAppAssembler roleAppAssembler;
 
@@ -72,6 +75,22 @@ public class RoleCommandService {
 
         roleDomainService.validateDelete(id);
         roleRepository.deleteById(id);
+    }
+
+    /**
+     * 分配菜单
+     *
+     * @param command 分配菜单命令
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void assignMenus(RoleAssignMenusCommand command) {
+        BizAssert.notNull(command, CommonResponseCode.PARAM_ERROR, "分配菜单命令不能为空");
+
+        roleDomainService.validateAssignMenus(command.getRoleId(), command.getMenuIds());
+
+        menuDomainService.validateMenusExist(command.getMenuIds());
+
+        roleRepository.replaceRoleMenus(command.getRoleId(), command.getMenuIds());
     }
 
 }

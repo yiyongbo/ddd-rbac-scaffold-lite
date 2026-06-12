@@ -1,6 +1,8 @@
 package io.github.yiyongbo.scaffold.infrastructure.persistence.menu.repository;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
 import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.assembler.MenuPersistenceAssembler;
@@ -52,7 +54,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 
     @Override
     public Optional<MenuEntity> findByPermissionCode(String permissionCode) {
-        LambdaQueryWrapper<MenuPO> wrapper = new LambdaQueryWrapper<MenuPO>()
+        LambdaQueryWrapper<MenuPO> wrapper = Wrappers.lambdaQuery(MenuPO.class)
                 .eq(MenuPO::getPermissionCode, permissionCode);
 
         MenuPO menuPO = menuMapper.selectOne(wrapper);
@@ -61,7 +63,7 @@ public class MenuRepositoryImpl implements MenuRepository {
 
     @Override
     public List<MenuEntity> findAll() {
-        LambdaQueryWrapper<MenuPO> wrapper = new LambdaQueryWrapper<MenuPO>()
+        LambdaQueryWrapper<MenuPO> wrapper = Wrappers.lambdaQuery(MenuPO.class)
                 .orderByAsc(MenuPO::getSort)
                 .orderByAsc(MenuPO::getId);
 
@@ -78,7 +80,7 @@ public class MenuRepositoryImpl implements MenuRepository {
         }
 
         Long count = menuMapper.selectCount(
-                new LambdaQueryWrapper<MenuPO>().eq(MenuPO::getId, id)
+                Wrappers.lambdaQuery(MenuPO.class).eq(MenuPO::getId, id)
         );
         return count != null && count > 0;
     }
@@ -89,10 +91,23 @@ public class MenuRepositoryImpl implements MenuRepository {
             return false;
         }
 
-        LambdaQueryWrapper<MenuPO> wrapper = new LambdaQueryWrapper<MenuPO>()
-                .eq(MenuPO::getParentId, parentId)
-                .last("LIMIT 1");
+        Long count = menuMapper.selectCount(
+                Wrappers.lambdaQuery(MenuPO.class).eq(MenuPO::getParentId, parentId)
+        );
 
-        return menuMapper.selectOne(wrapper) != null;
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean existsAllByIds(List<Long> menuIds) {
+        if (CollUtil.isEmpty(menuIds)) {
+            return true;
+        }
+
+        Long count = menuMapper.selectCount(
+                Wrappers.lambdaQuery(MenuPO.class).in(MenuPO::getId, menuIds)
+        );
+
+        return count != null && count == menuIds.size();
     }
 }

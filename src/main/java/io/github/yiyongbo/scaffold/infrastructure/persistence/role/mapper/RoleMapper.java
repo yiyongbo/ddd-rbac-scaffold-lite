@@ -10,4 +10,5 @@ import io.github.yiyongbo.scaffold.infrastructure.persistence.role.po.RolePO;
  * @since 2026/6/9 22:10
  */
 public interface RoleMapper extends BaseMapper<RolePO> {
+
 }

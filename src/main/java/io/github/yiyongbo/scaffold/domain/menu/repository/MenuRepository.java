@@ -74,4 +74,11 @@ public interface MenuRepository {
      */
     boolean existsByParentId(Long parentId);
 
+    /**
+     * 判断菜单ID列表是否全部存在
+     *
+     * @param menuIds 菜单ID列表
+     * @return 是否全部存在
+     */
+    boolean existsAllByIds(List<Long> menuIds);
 }

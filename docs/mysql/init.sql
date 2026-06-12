@@ -42,3 +42,15 @@ CREATE TABLE sys_role (
     KEY idx_sort (sort)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='系统角色表';
+
+# 角色菜单关联表
+CREATE TABLE sys_role_menu (
+    id BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    role_id BIGINT NOT NULL COMMENT '角色ID',
+    menu_id BIGINT NOT NULL COMMENT '菜单ID',
+    created_at DATETIME DEFAULT NULL COMMENT '创建时间',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_role_menu (role_id, menu_id),
+    KEY idx_role_id (role_id),
+    KEY idx_menu_id (menu_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单关联表';

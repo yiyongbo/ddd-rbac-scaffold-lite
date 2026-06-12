@@ -21,14 +21,26 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RolePersistenceAssembler {
 
+    /**
+     * 角色领域实体 转 角色持久化对象
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     RolePO toPO(RoleEntity entity);
 
+    /**
+     * 角色持久化对象 转 角色领域实体
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     RoleEntity toEntity(RolePO po);
 
+    /**
+     * 角色持久化对象列表 转 角色领域实体列表
+     */
     List<RoleEntity> toEntityList(List<RolePO> poList);
 
+    /**
+     * 角色持久化分页对象 转 角色领域分页结果
+     */
     default PageResult<RoleEntity> toEntityPageResult(Page<RolePO> page) {
         return PageResult.of(
                 toEntityList(page.getRecords()),

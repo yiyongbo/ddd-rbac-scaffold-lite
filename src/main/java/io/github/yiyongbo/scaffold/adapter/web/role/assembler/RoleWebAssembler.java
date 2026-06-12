@@ -1,10 +1,12 @@
 package io.github.yiyongbo.scaffold.adapter.web.role.assembler;
 
-import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleCreateRequest;
+import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleMenuAssignRequest;
+import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RolePageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RoleResponse;
+import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.application.role.dto.RoleDTO;
@@ -26,12 +28,12 @@ import java.util.List;
 public interface RoleWebAssembler {
 
     /**
-     * 创建请求转创建命令
+     * 创建请求 转 创建命令
      */
     RoleCreateCommand toCreateCommand(RoleCreateRequest request);
 
     /**
-     * 更新请求转更新命令
+     * 更新请求 转 更新命令
      */
     @Mapping(target = "id", source = "id")
     RoleUpdateCommand toUpdateCommand(Long id, RoleUpdateRequest request);
@@ -59,7 +61,12 @@ public interface RoleWebAssembler {
                 toPageResponseList(pageResult.getRecords()),
                 pageResult.getTotal(),
                 pageResult.getPageNum(),
-                pageResult.getPageSize()
-        );
+                pageResult.getPageSize());
     }
+
+    /**
+     * 角色菜单权限分配请求 转 角色菜单权限分配命令
+     */
+    @Mapping(target = "roleId", source = "roleId")
+    RoleAssignMenusCommand toAssignMenusCommand(Long roleId, RoleMenuAssignRequest request);
 }

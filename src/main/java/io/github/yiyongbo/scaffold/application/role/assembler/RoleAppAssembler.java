@@ -27,22 +27,43 @@ import java.util.List;
 public interface RoleAppAssembler {
 
 
+    /**
+     * 创建角色命令 转 角色领域实体
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     RoleEntity toEntity(RoleCreateCommand command);
 
+    /**
+     * 更新角色命令 转 角色领域实体
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     RoleEntity toEntity(RoleUpdateCommand command);
 
+    /**
+     * 角色领域实体 转 角色数据传输对象
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     RoleDTO toDTO(RoleEntity entity);
 
+    /**
+     * 角色领域实体 转 角色分页数据传输对象
+     */
     RolePageCondition toPageCondition(RolePageQuery query);
 
+    /**
+     * 角色领域实体列表 转 角色分页 DTO 列表
+     */
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     RolePageDTO toPageDTO(RoleEntity entity);
 
+    /**
+     * 角色领域实体列表 转 角色分页 DTO 列表
+     */
     List<RolePageDTO> toPageDTOList(List<RoleEntity> entities);
 
+    /**
+     * 角色领域分页结果 转 角色分页 DTO 分页结果
+     */
     default PageResult<RolePageDTO> toDTOPageResult(PageResult<RoleEntity> pageResult) {
         return PageResult.of(
                 toPageDTOList(pageResult.getRecords()),
