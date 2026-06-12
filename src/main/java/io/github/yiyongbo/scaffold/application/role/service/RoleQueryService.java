@@ -10,8 +10,11 @@ import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.role.model.entity.RoleEntity;
 import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
 import io.github.yiyongbo.scaffold.domain.role.repository.query.RolePageCondition;
+import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 系统角色查询服务
@@ -23,10 +26,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RoleQueryService {
 
+    private final RoleDomainService roleDomainService;
+
     private final RoleRepository roleRepository;
 
     private final RoleAppAssembler roleAppAssembler;
 
+    /**
+     * 获取角色详情
+     *
+     * @param id 角色ID
+     * @return 角色详情
+     */
     public RoleDTO detail(Long id) {
         BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
 
@@ -36,6 +47,12 @@ public class RoleQueryService {
         return roleAppAssembler.toDTO(role);
     }
 
+    /**
+     * 角色分页查询
+     *
+     * @param query 角色分页查询参数
+     * @return 角色分页查询结果
+     */
     public PageResult<RolePageDTO> page(RolePageQuery query) {
         BizAssert.notNull(query, CommonResponseCode.PARAM_ERROR, "角色分页查询参数不能为空");
 
@@ -43,5 +60,18 @@ public class RoleQueryService {
         PageResult<RoleEntity> pageResult = roleRepository.page(condition);
 
         return roleAppAssembler.toDTOPageResult(pageResult);
+    }
+
+    /**
+     * 获取角色菜单ID列表
+     *
+     * @param roleId 角色ID
+     * @return 角色菜单ID列表
+     */
+    public List<Long> listMenuIds(Long roleId) {
+        BizAssert.notNull(roleId, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
+
+        roleDomainService.validateRoleExists(roleId);
+        return roleRepository.listMenuIdsByRoleId(roleId);
     }
 }

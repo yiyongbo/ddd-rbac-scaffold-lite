@@ -105,7 +105,20 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
+    public List<Long> listMenuIdsByRoleId(Long roleId) {
+        if (roleId == null) {
+            return List.of();
+        }
+        List<RoleMenuPO> roleMenus = roleMenuMapper.selectList(Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getRoleId, roleId));
+        return roleMenus.stream().map(RoleMenuPO::getMenuId).toList();
+    }
+
+    @Override
     public void replaceRoleMenus(Long roleId, List<Long> menuIds) {
+        if (roleId == null) {
+            return;
+        }
+
         // 删除角色关联的菜单
         roleMenuMapper.delete(Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getRoleId, roleId));
 

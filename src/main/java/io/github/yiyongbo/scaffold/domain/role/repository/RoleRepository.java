@@ -70,6 +70,14 @@ public interface RoleRepository {
     PageResult<RoleEntity> page(RolePageCondition condition);
 
     /**
+     * 根据角色ID查询菜单ID列表
+     *
+     * @param roleId 角色ID
+     * @return 菜单ID列表
+     */
+    List<Long> listMenuIdsByRoleId(Long roleId);
+
+    /**
      * 替换角色关联的菜单
      *
      * @param roleId  角色ID

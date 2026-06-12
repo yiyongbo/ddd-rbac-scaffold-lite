@@ -68,11 +68,20 @@ public class RoleDomainService {
      * @param menuIds 菜单ID列表
      */
     public void validateAssignMenus(Long roleId, List<Long> menuIds) {
-        BizAssert.notNull(roleId, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
         BizAssert.notNull(menuIds, CommonResponseCode.PARAM_ERROR, "菜单ID列表不能为空");
 
         long distinctCount = menuIds.stream().distinct().count();
         BizAssert.isTrue(distinctCount == menuIds.size(), CommonResponseCode.PARAM_ERROR, "菜单ID不能重复");
+
+        validateRoleExists(roleId);
+    }
+
+    /**
+     * 校验角色存在
+     * @param roleId 角色ID
+     */
+    public void validateRoleExists(Long roleId) {
+        BizAssert.notNull(roleId, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
 
         boolean existRole = roleRepository.existsById(roleId);
         BizAssert.isTrue(existRole, CommonResponseCode.NOT_FOUND, "角色不存在");
@@ -86,5 +95,6 @@ public class RoleDomainService {
                 .isPresent();
         BizAssert.isTrue(!existsSameRoleCode, CommonResponseCode.PARAM_ERROR, "角色标识已存在");
     }
+
 
 }

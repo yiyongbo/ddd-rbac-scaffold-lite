@@ -1,15 +1,5 @@
 package io.github.yiyongbo.scaffold.adapter.web.role;
 
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.github.yiyongbo.scaffold.adapter.web.role.assembler.RoleWebAssembler;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleCreateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleMenuAssignRequest;
@@ -32,6 +22,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 系统角色管理 Controller
@@ -95,6 +89,16 @@ public class RoleController {
         RolePageQuery query = roleWebAssembler.toPageQuery(request);
         PageResult<RolePageDTO> page = roleQueryService.page(query);
         return Result.success(roleWebAssembler.toPageResponse(page));
+    }
+
+    @Operation(summary = "查询角色已分配菜单ID列表")
+    @GetMapping("/{roleId}/menus")
+    public Result<List<Long>> listMenuIds(
+            @Parameter(description = "角色ID", required = true, example = "1")
+            @PathVariable Long roleId) {
+
+        List<Long> menuIds = roleQueryService.listMenuIds(roleId);
+        return Result.success(menuIds);
     }
 
     @Operation(summary = "分配角色菜单权限")
