@@ -1,6 +1,8 @@
 package io.github.yiyongbo.scaffold.domain.user.repository;
 
+import io.github.yiyongbo.scaffold.common.page.PageResult;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;
+import io.github.yiyongbo.scaffold.domain.user.repository.query.UserPageCondition;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,4 +59,28 @@ public interface UserRepository {
      * @param roleIds 角色ID列表
      */
     void replaceUserRoles(Long userId, List<Long> roleIds);
+
+    /**
+     * 根据ID查询用户
+     *
+     * @param id 用户ID
+     * @return 用户领域实体
+     */
+    Optional<UserEntity> findById(Long id);
+
+    /**
+     * 分页查询用户
+     *
+     * @param condition 查询条件
+     * @return 用户领域实体分页结果
+     */
+    PageResult<UserEntity> page(UserPageCondition condition);
+
+    /**
+     * 根据用户ID查询角色ID列表
+     *
+     * @param userId 用户ID
+     * @return 角色ID列表
+     */
+    List<Long> listRoleIds(Long userId);
 }

@@ -6,13 +6,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 系统用户响应
+ * 用户分页响应
  *
  * @author kidd
- * @since 2026/6/14 18:17
+ * @since 2026/6/14 22:32
  */
 @Data
-public class UserResponse {
+public class UserPageResponse {
 
     @Schema(description = "用户ID")
     private Long id;
@@ -37,7 +37,4 @@ public class UserResponse {
 
     @Schema(description = "创建时间")
     private LocalDateTime createdAt;
-
-    @Schema(description = "更新时间")
-    private LocalDateTime updatedAt;
 }

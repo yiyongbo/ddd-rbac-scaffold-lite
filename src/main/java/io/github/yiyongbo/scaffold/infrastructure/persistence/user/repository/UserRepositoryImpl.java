@@ -2,10 +2,14 @@ package io.github.yiyongbo.scaffold.infrastructure.persistence.user.repository;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.github.yiyongbo.scaffold.common.page.PageResult;
 import io.github.yiyongbo.scaffold.common.util.BatchUtils;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;
 import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
+import io.github.yiyongbo.scaffold.domain.user.repository.query.UserPageCondition;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.user.assembler.UserPersistenceAssembler;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.user.mapper.UserMapper;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.user.mapper.UserRoleMapper;
@@ -100,5 +104,38 @@ public class UserRepositoryImpl implements UserRepository {
         // 添加用户关联的角色
         LocalDateTime now = LocalDateTime.now();
         BatchUtils.execute(roleIds, roleIdList -> userRoleMapper.insertBatch(userId, roleIdList, now));
+    }
+
+    @Override
+    public Optional<UserEntity> findById(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+
+        UserPO userPO = userMapper.selectById(id);
+        return Optional.ofNullable(userPO).map(userPersistenceAssembler::toEntity);
+    }
+
+    @Override
+    public PageResult<UserEntity> page(UserPageCondition condition) {
+        Page<UserPO> page = new Page<>(condition.getPageNo(), condition.getPageSize());
+
+        LambdaQueryWrapper<UserPO> queryWrapper = Wrappers.lambdaQuery(UserPO.class)
+                .eq(UserPO::getUsername, condition.getUsername())
+                .orderByAsc(UserPO::getId);
+
+        Page<UserPO> resultPage = userMapper.selectPage(page, queryWrapper);
+
+        return userPersistenceAssembler.toEntityPageResult(resultPage);
+    }
+
+    @Override
+    public List<Long> listRoleIds(Long userId) {
+        if (userId == null) {
+            return List.of();
+        }
+
+        List<UserRolePO> userRoles = userRoleMapper.selectList(Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getUserId, userId));
+        return userRoles.stream().map(UserRolePO::getRoleId).toList();
     }
 }
