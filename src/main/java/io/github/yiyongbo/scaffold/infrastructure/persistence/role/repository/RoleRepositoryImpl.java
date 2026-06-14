@@ -39,6 +39,10 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Long save(RoleEntity role) {
+        if (role == null) {
+            return null;
+        }
+
         RolePO rolePO = rolePersistenceAssembler.toPO(role);
         roleMapper.insert(rolePO);
         return rolePO.getId();
@@ -46,12 +50,20 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public void updateById(RoleEntity role) {
+        if (role == null || role.getId() == null) {
+            return;
+        }
+
         RolePO rolePO = rolePersistenceAssembler.toPO(role);
         roleMapper.updateById(rolePO);
     }
 
     @Override
     public void deleteById(Long id) {
+        if (id == null) {
+            return;
+        }
+
         roleMapper.deleteById(id);
     }
 
@@ -129,5 +141,18 @@ public class RoleRepositoryImpl implements RoleRepository {
         // 添加角色关联的菜单
         LocalDateTime now = LocalDateTime.now();
         BatchUtils.execute(menuIds, menuIdList -> roleMenuMapper.insertBatch(roleId, menuIdList, now));
+    }
+
+    @Override
+    public boolean existsAllByIds(List<Long> roleIds) {
+        if (CollUtil.isEmpty(roleIds)) {
+            return true;
+        }
+
+        Long count = roleMapper.selectCount(
+                Wrappers.lambdaQuery(RolePO.class).in(RolePO::getId, roleIds)
+        );
+
+        return count != null && count == roleIds.size();
     }
 }

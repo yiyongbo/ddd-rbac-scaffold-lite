@@ -1,5 +1,6 @@
 package io.github.yiyongbo.scaffold.domain.role.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
@@ -97,4 +98,12 @@ public class RoleDomainService {
     }
 
 
+    public void validateRoles(List<Long> roleIds) {
+        if (CollUtil.isEmpty(roleIds)) {
+            return;
+        }
+
+        boolean existsAll = roleRepository.existsAllByIds(roleIds);
+        BizAssert.isTrue(existsAll, CommonResponseCode.NOT_FOUND, "存在无效角色");
+    }
 }

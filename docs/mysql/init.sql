@@ -36,7 +36,7 @@ CREATE TABLE sys_role (
     updated_at DATETIME    NOT NULL COMMENT '更新时间',
     deleted    TINYINT     NOT NULL DEFAULT 0 COMMENT '逻辑删除：0未删除，1已删除',
     PRIMARY KEY (id),
-    UNIQUE KEY uk_role_code_deleted (role_code, deleted),
+    UNIQUE KEY uk_role_code_deleted (role_code),
     KEY idx_role_name (role_name),
     KEY idx_enabled (enabled),
     KEY idx_sort (sort)
@@ -45,12 +45,46 @@ CREATE TABLE sys_role (
 
 # 角色菜单关联表
 CREATE TABLE sys_role_menu (
-    id BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    role_id BIGINT NOT NULL COMMENT '角色ID',
-    menu_id BIGINT NOT NULL COMMENT '菜单ID',
+    id         BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    role_id    BIGINT NOT NULL COMMENT '角色ID',
+    menu_id    BIGINT NOT NULL COMMENT '菜单ID',
     created_at DATETIME DEFAULT NULL COMMENT '创建时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_role_menu (role_id, menu_id),
     KEY idx_role_id (role_id),
     KEY idx_menu_id (menu_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单关联表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色菜单关联表';
+
+# 系统用户表
+CREATE TABLE `sys_user` (
+    `id`         BIGINT       NOT NULL COMMENT '主键ID',
+    `username`   VARCHAR(64)  NOT NULL COMMENT '用户名',
+    `password`   VARCHAR(255) NOT NULL COMMENT '密码',
+    `nickname`   VARCHAR(64)  NOT NULL COMMENT '用户昵称',
+    `email`      VARCHAR(128)          DEFAULT NULL COMMENT '邮箱',
+    `phone`      VARCHAR(32)           DEFAULT NULL COMMENT '手机号',
+    `avatar`     VARCHAR(255)          DEFAULT NULL COMMENT '头像',
+    `enabled`    TINYINT      NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
+    `created_at` DATETIME              DEFAULT NULL COMMENT '创建时间',
+    `updated_at` DATETIME              DEFAULT NULL COMMENT '更新时间',
+    `deleted`    TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除：0未删除，1已删除',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_username` (`username`),
+    KEY `idx_nickname` (`nickname`),
+    KEY `idx_enabled` (`enabled`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='系统用户表';
+
+# 用户角色关联表
+CREATE TABLE `sys_user_role` (
+    `id`         BIGINT NOT NULL COMMENT '主键ID',
+    `user_id`    BIGINT NOT NULL COMMENT '用户ID',
+    `role_id`    BIGINT NOT NULL COMMENT '角色ID',
+    `created_at` DATETIME DEFAULT NULL COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_user_role` (`user_id`, `role_id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_role_id` (`role_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='用户角色关联表';

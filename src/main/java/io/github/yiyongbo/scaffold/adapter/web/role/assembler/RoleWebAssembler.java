@@ -1,12 +1,10 @@
 package io.github.yiyongbo.scaffold.adapter.web.role.assembler;
 
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleCreateRequest;
-import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleMenuAssignRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RolePageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RoleResponse;
-import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.application.role.dto.RoleDTO;
@@ -64,9 +62,4 @@ public interface RoleWebAssembler {
                 pageResult.getPageSize());
     }
 
-    /**
-     * 角色菜单权限分配请求 转 角色菜单权限分配命令
-     */
-    @Mapping(target = "roleId", source = "roleId")
-    RoleAssignMenusCommand toAssignMenusCommand(Long roleId, RoleMenuAssignRequest request);
 }

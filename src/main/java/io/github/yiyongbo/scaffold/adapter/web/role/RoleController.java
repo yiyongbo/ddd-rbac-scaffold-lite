@@ -7,7 +7,6 @@ import io.github.yiyongbo.scaffold.adapter.web.role.request.RolePageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.request.RoleUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RolePageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.role.response.RoleResponse;
-import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.application.role.dto.RoleDTO;
@@ -67,23 +66,19 @@ public class RoleController {
 
     @Operation(summary = "删除角色")
     @DeleteMapping("/{id}")
-    public Result<Void> delete(
-            @Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
-
+    public Result<Void> delete(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
         roleCommandService.delete(id);
         return Result.success();
     }
 
     @Operation(summary = "获取角色详情")
     @GetMapping("/{id}")
-    public Result<RoleResponse> detail(
-            @Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
-
+    public Result<RoleResponse> detail(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
         RoleDTO role = roleQueryService.detail(id);
         return Result.success(roleWebAssembler.toResponse(role));
     }
 
-    @Operation(summary = "获取角色列表")
+    @Operation(summary = "获取角色分页")
     @GetMapping("/page")
     public Result<PageResult<RolePageResponse>> page(@Valid RolePageRequest request) {
         RolePageQuery query = roleWebAssembler.toPageQuery(request);
@@ -108,8 +103,7 @@ public class RoleController {
             @PathVariable Long roleId,
             @Valid @RequestBody RoleMenuAssignRequest request) {
 
-        RoleAssignMenusCommand assignMenusCommand = roleWebAssembler.toAssignMenusCommand(roleId, request);
-        roleCommandService.assignMenus(assignMenusCommand);
+        roleCommandService.assignMenus(roleId, request.getMenuIds());
         return Result.success();
     }
 }

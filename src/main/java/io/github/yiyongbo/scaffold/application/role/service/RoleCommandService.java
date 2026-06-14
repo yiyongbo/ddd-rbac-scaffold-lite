@@ -1,7 +1,6 @@
 package io.github.yiyongbo.scaffold.application.role.service;
 
 import io.github.yiyongbo.scaffold.application.role.assembler.RoleAppAssembler;
-import io.github.yiyongbo.scaffold.application.role.command.RoleAssignMenusCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
@@ -13,6 +12,8 @@ import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 系统角色命令服务
@@ -74,23 +75,26 @@ public class RoleCommandService {
         BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
 
         roleDomainService.validateDelete(id);
+
         roleRepository.deleteById(id);
     }
 
     /**
      * 分配菜单
      *
-     * @param command 分配菜单命令
+     * @param roleId 角色ID
+     * @param menuIds 菜单ID列表
      */
     @Transactional(rollbackFor = Exception.class)
-    public void assignMenus(RoleAssignMenusCommand command) {
-        BizAssert.notNull(command, CommonResponseCode.PARAM_ERROR, "分配菜单命令不能为空");
+    public void assignMenus(Long roleId, List<Long> menuIds) {
+        BizAssert.notNull(roleId, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
+        BizAssert.notNull(menuIds, CommonResponseCode.PARAM_ERROR, "菜单ID列表不能为空");
 
-        roleDomainService.validateAssignMenus(command.getRoleId(), command.getMenuIds());
+        roleDomainService.validateAssignMenus(roleId, menuIds);
 
-        menuDomainService.validateMenusExist(command.getMenuIds());
+        menuDomainService.validateMenusExist(menuIds);
 
-        roleRepository.replaceRoleMenus(command.getRoleId(), command.getMenuIds());
+        roleRepository.replaceRoleMenus(roleId, menuIds);
     }
 
 }

@@ -84,4 +84,12 @@ public interface RoleRepository {
      * @param menuIds 菜单ID列表
      */
     void replaceRoleMenus(Long roleId, List<Long> menuIds);
+
+    /**
+     * 校验角色ID列表是否存在
+     *
+     * @param roleIds 角色ID列表
+     * @return 角色是否全部存在
+     */
+    boolean existsAllByIds(List<Long> roleIds);
 }
