@@ -111,7 +111,7 @@ public class MenuEntity {
     }
 
     public void toggleEnabled() {
-        BizAssert.notNull(this.enabled, CommonResponseCode.USER_ERROR, "菜单启用状态不能为空");
+        BizAssert.notNull(this.enabled, CommonResponseCode.INTERNAL_ERROR, "菜单启用状态不能为空");
 
         this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
     }

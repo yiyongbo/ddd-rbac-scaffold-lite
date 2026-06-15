@@ -50,8 +50,8 @@ public class UserDomainService {
         BizAssert.isTrue(StrUtil.isNotBlank(newPassword), CommonResponseCode.PARAM_ERROR, "新密码不能为空");
         BizAssert.isTrue(StrUtil.isNotBlank(confirmPassword), CommonResponseCode.PARAM_ERROR, "确认密码不能为空");
 
-        BizAssert.isTrue(!newPassword.equals(oldPassword), CommonResponseCode.PARAM_ERROR, "新密码不能与旧密码相同");
-        BizAssert.isTrue(newPassword.equals(confirmPassword), CommonResponseCode.PARAM_ERROR, "新密码和确认密码不一致");
+        BizAssert.isTrue(!newPassword.equals(oldPassword), CommonResponseCode.USER_ERROR, "新密码不能与旧密码相同");
+        BizAssert.isTrue(newPassword.equals(confirmPassword), CommonResponseCode.USER_ERROR, "新密码和确认密码不一致");
     }
 
     /**

@@ -105,7 +105,7 @@ public class UserCommandService {
                 .orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "用户不存在"));
 
         boolean isOldPasswordMatch = passwordService.matches(command.getOldPassword(), user.getPassword());
-        BizAssert.isTrue(isOldPasswordMatch, CommonResponseCode.PARAM_ERROR, "原密码错误");
+        BizAssert.isTrue(isOldPasswordMatch, CommonResponseCode.USER_ERROR, "原密码错误");
 
         userDomainService.validateChangePassword(command.getOldPassword(), command.getNewPassword(), command.getConfirmPassword());
 
