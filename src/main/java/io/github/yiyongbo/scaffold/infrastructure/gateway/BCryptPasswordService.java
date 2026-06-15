@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * BCrypt 密码 服务
+ * BCrypt 密码服务实现
  *
  * @author kidd
  * @since 2026/6/15 16:07
