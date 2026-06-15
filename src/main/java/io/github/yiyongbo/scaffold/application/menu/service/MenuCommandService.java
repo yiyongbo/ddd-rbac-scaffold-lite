@@ -3,7 +3,6 @@ package io.github.yiyongbo.scaffold.application.menu.service;
 import io.github.yiyongbo.scaffold.application.menu.assembler.MenuAppAssembler;
 import io.github.yiyongbo.scaffold.application.menu.command.MenuCreateCommand;
 import io.github.yiyongbo.scaffold.application.menu.command.MenuUpdateCommand;
-import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
@@ -76,9 +75,9 @@ public class MenuCommandService {
 
         MenuEntity menu = menuRepository.findById(id).orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "菜单不存在"));
 
-        YesNoEnum changedEnabled = menu.toggleEnabled();
+        menu.toggleEnabled();
 
-        menuRepository.updateEnabledById(id, changedEnabled.getCode());
+        menuRepository.updateEnabledById(id, menu.getEnabled().getCode());
     }
 
     /**

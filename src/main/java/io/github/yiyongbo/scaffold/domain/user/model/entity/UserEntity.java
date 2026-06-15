@@ -1,6 +1,8 @@
 package io.github.yiyongbo.scaffold.domain.user.model.entity;
 
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
+import io.github.yiyongbo.scaffold.common.exception.BizAssert;
+import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -65,6 +67,8 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     public void toggleEnabled() {
+        BizAssert.notNull(this.enabled, CommonResponseCode.USER_ERROR, "用户启用状态不能为空");
+
         this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
     }
 }

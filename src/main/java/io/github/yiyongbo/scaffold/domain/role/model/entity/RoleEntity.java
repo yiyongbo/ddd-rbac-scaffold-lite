@@ -1,6 +1,8 @@
 package io.github.yiyongbo.scaffold.domain.role.model.entity;
 
 import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
+import io.github.yiyongbo.scaffold.common.exception.BizAssert;
+import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -54,8 +56,9 @@ public class RoleEntity {
      */
     private LocalDateTime updatedAt;
 
-    public YesNoEnum toggleEnabled() {
+    public void toggleEnabled() {
+        BizAssert.notNull(this.enabled, CommonResponseCode.USER_ERROR, "角色启用状态不能为空");
+
         this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
-        return this.enabled;
     }
 }
