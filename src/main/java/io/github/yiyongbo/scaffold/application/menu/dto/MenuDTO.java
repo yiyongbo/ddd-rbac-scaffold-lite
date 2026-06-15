@@ -64,11 +64,6 @@ public class MenuDTO {
     private Integer sort;
 
     /**
-     * 是否可见：1是，0否
-     */
-    private Integer visible;
-
-    /**
      * 是否已启用：1是，0否
      */
     private Integer enabled;

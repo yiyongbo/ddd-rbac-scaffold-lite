@@ -29,6 +29,14 @@ public interface MenuRepository {
     void update(MenuEntity menu);
 
     /**
+     * 根据ID启用/禁用菜单
+     *
+     * @param id 菜单ID
+     * @param changeEnabled 启用/禁用（1：启用，0：禁用）
+     */
+    void updateEnabledById(Long id, Integer changeEnabled);
+
+    /**
      * 根据ID删除菜单
      *
      * @param id 菜单ID

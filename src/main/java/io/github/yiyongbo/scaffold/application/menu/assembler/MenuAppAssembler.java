@@ -25,7 +25,6 @@ public interface MenuAppAssembler {
      * 创建菜单请求 转 菜单领域实体
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuCreateCommand command);
 
@@ -33,7 +32,6 @@ public interface MenuAppAssembler {
      * 更新菜单请求 转 菜单领域实体
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuUpdateCommand command);
 
@@ -42,7 +40,6 @@ public interface MenuAppAssembler {
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuDTO toDTO(MenuEntity entity);
 
@@ -51,18 +48,12 @@ public interface MenuAppAssembler {
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuTreeDTO toTreeDTO(MenuEntity entity);
 
     @Named("codeToMenuType")
     default MenuTypeEnum codeToMenuType(Integer code) {
         return EnumUtils.getByCode(MenuTypeEnum.class, code);
-    }
-
-    @Named("codeToYesNo")
-    default YesNoEnum codeToYesNo(Integer code) {
-        return EnumUtils.getByCode(YesNoEnum.class, code);
     }
 
     @Named("menuTypeToCode")
@@ -73,6 +64,11 @@ public interface MenuAppAssembler {
     @Named("menuTypeToDesc")
     default String menuTypeToDesc(MenuTypeEnum menuType) {
         return menuType == null ? null : menuType.getDesc();
+    }
+
+    @Named("codeToYesNo")
+    default YesNoEnum codeToYesNo(Integer code) {
+        return EnumUtils.getByCode(YesNoEnum.class, code);
     }
 
     @Named("yesNoToCode")

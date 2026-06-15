@@ -65,11 +65,6 @@ public class MenuEntity {
     private Integer sort;
 
     /**
-     * 是否可见：1是，0否
-     */
-    private YesNoEnum visible;
-
-    /**
      * 是否已启用：1是，0否
      */
     private YesNoEnum enabled;
@@ -113,6 +108,13 @@ public class MenuEntity {
 
     public void validateParentNotSelf() {
         BizAssert.isTrue(!Objects.equals(this.id, this.parentId), CommonResponseCode.USER_ERROR, "父级菜单不能是当前菜单");
+    }
+
+    public YesNoEnum toggleEnabled() {
+        BizAssert.notNull(this.enabled, CommonResponseCode.USER_ERROR, "菜单启用状态不能为空");
+
+        this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
+        return this.enabled;
     }
 
     private void validateDirectoryFields(String permissionCode) {

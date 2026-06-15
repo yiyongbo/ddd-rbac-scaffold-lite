@@ -42,6 +42,13 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     @Override
+    public void updateEnabledById(Long id, Integer changeEnabled) {
+        menuMapper.update(
+                Wrappers.lambdaUpdate(MenuPO.class).set(MenuPO::getEnabled, changeEnabled).eq(MenuPO::getId, id)
+        );
+    }
+
+    @Override
     public void delete(Long id) {
         menuMapper.deleteById(id);
     }

@@ -55,11 +55,6 @@ public class MenuCreateRequest {
     @Schema(description = "排序值，越小越靠前", example = "1")
     private Integer sort;
 
-    @NotNull(message = "是否可见不能为空")
-    @EnumValue(enumClass = YesNoEnum.class, message = "是否可见不合法")
-    @Schema(description = "是否可见：1是，0否", example = "1")
-    private Integer visible;
-
     @NotNull(message = "状态不能为空")
     @EnumValue(enumClass = YesNoEnum.class, message = "是否已启用不合法")
     @Schema(description = "是否已启用：1是，0否", example = "1")

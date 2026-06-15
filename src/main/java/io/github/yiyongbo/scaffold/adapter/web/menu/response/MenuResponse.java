@@ -42,9 +42,6 @@ public class MenuResponse {
     @Schema(description = "排序值，越小越靠前", example = "1")
     private Integer sort;
 
-    @Schema(description = "是否可见：1是，0否", example = "1")
-    private Integer visible;
-
     @Schema(description = "是否已启用：1是，0否", example = "1")
     private Integer enabled;
 

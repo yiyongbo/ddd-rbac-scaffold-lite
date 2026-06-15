@@ -23,7 +23,6 @@ public interface MenuPersistenceAssembler {
      * 菜单领域实体 转 菜单持久化对象
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuPO toPO(MenuEntity entity);
 
@@ -31,7 +30,6 @@ public interface MenuPersistenceAssembler {
      * 菜单持久化对象 转 菜单领域实体
      */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
-    @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuPO po);
 

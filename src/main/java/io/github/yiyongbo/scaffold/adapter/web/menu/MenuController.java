@@ -61,22 +61,23 @@ public class MenuController {
         return Result.success();
     }
 
+    @Operation(summary = "切换菜单启用状态")
+    @PutMapping("/{id}/enabled/toggle")
+    public Result<Void> toggleEnabled(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
+        menuCommandService.toggleEnabled(id);
+        return Result.success();
+    }
+
     @Operation(summary = "删除菜单")
     @DeleteMapping("/{id}")
-    public Result<Void> delete(
-            @Parameter(description = "菜单ID", required = true, example = "1")
-            @PathVariable Long id) {
-
+    public Result<Void> delete(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
         menuCommandService.delete(id);
         return Result.success();
     }
 
     @Operation(summary = "查询菜单详情")
     @GetMapping("/{id}")
-    public Result<MenuResponse> detail(
-            @Parameter(description = "菜单ID", required = true, example = "1")
-            @PathVariable Long id) {
-
+    public Result<MenuResponse> detail(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
         MenuDTO menuDTO = menuQueryService.detail(id);
         return Result.success(menuWebAssembler.toResponse(menuDTO));
     }

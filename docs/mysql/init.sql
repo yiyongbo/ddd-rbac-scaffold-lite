@@ -9,7 +9,6 @@ CREATE TABLE sys_menu (
     permission_code VARCHAR(128)         DEFAULT NULL COMMENT '权限标识，例如 system:user:create',
     icon            VARCHAR(64)          DEFAULT NULL COMMENT '菜单图标',
     sort            INT         NOT NULL DEFAULT 0 COMMENT '排序值，越小越靠前',
-    visible         TINYINT     NOT NULL DEFAULT 1 COMMENT '是否可见：1是，0否',
     enabled         TINYINT     NOT NULL DEFAULT 1 COMMENT '是否已启用：1是，0否',
     remark          VARCHAR(255)         DEFAULT NULL COMMENT '备注',
     created_at      DATETIME    NOT NULL COMMENT '创建时间',
