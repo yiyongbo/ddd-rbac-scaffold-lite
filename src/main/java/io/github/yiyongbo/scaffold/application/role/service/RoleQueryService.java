@@ -72,6 +72,7 @@ public class RoleQueryService {
         BizAssert.notNull(roleId, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
 
         roleDomainService.validateRoleExists(roleId);
+
         return roleRepository.listMenuIdsByRoleId(roleId);
     }
 }
