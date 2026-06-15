@@ -39,10 +39,6 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Long save(RoleEntity role) {
-        if (role == null) {
-            return null;
-        }
-
         RolePO rolePO = rolePersistenceAssembler.toPO(role);
         roleMapper.insert(rolePO);
         return rolePO.getId();
@@ -50,20 +46,19 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public void updateById(RoleEntity role) {
-        if (role == null || role.getId() == null) {
-            return;
-        }
-
         RolePO rolePO = rolePersistenceAssembler.toPO(role);
         roleMapper.updateById(rolePO);
     }
 
     @Override
-    public void deleteById(Long id) {
-        if (id == null) {
-            return;
-        }
+    public void updateEnabledById(Long id, Integer changedEnabled) {
+        roleMapper.update(
+                Wrappers.lambdaUpdate(RolePO.class).set(RolePO::getEnabled, changedEnabled).eq(RolePO::getId, id)
+        );
+    }
 
+    @Override
+    public void deleteById(Long id) {
         roleMapper.deleteById(id);
     }
 

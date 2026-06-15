@@ -26,7 +26,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RoleAppAssembler {
 
-
     /**
      * 创建角色命令 转 角色领域实体
      */

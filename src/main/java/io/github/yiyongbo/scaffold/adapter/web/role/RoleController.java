@@ -64,6 +64,13 @@ public class RoleController {
         return Result.success();
     }
 
+    @Operation(summary = "切换角色启用状态")
+    @PutMapping("/{id}/toggleEnabled")
+    public Result<Void> toggleEnabled(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
+        roleCommandService.toggleEnabled(id);
+        return Result.success();
+    }
+
     @Operation(summary = "删除角色")
     @DeleteMapping("/{id}")
     public Result<Void> delete(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {

@@ -31,6 +31,14 @@ public interface RoleRepository {
     void updateById(RoleEntity role);
 
     /**
+     * 根据角色ID更新角色启用状态
+     *
+     * @param id   角色ID
+     * @param code 启用状态码
+     */
+    void updateEnabledById(Long id, Integer code);
+
+    /**
      * 根据角色ID删除角色
      *
      * @param id 角色ID

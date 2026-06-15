@@ -3,6 +3,7 @@ package io.github.yiyongbo.scaffold.application.role.service;
 import io.github.yiyongbo.scaffold.application.role.assembler.RoleAppAssembler;
 import io.github.yiyongbo.scaffold.application.role.command.RoleCreateCommand;
 import io.github.yiyongbo.scaffold.application.role.command.RoleUpdateCommand;
+import io.github.yiyongbo.scaffold.common.enums.YesNoEnum;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
@@ -63,6 +64,22 @@ public class RoleCommandService {
         roleDomainService.validateUpdate(role);
 
         roleRepository.updateById(role);
+    }
+
+    /**
+     * 切换角色启用状态
+     *
+     * @param id 角色ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void toggleEnabled(Long id) {
+        BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "角色ID不能为空");
+
+        RoleEntity role = roleRepository.findById(id).orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "角色不存在"));
+
+        YesNoEnum changedEnabled = role.toggleEnabled();
+
+        roleRepository.updateEnabledById(id, changedEnabled.getCode());
     }
 
     /**

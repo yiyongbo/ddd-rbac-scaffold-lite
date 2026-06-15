@@ -53,4 +53,9 @@ public class RoleEntity {
      * 更新时间
      */
     private LocalDateTime updatedAt;
+
+    public YesNoEnum toggleEnabled() {
+        this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
+        return this.enabled;
+    }
 }
