@@ -48,16 +48,22 @@ public class MenuRepositoryImpl implements MenuRepository {
 
     @Override
     public Optional<MenuEntity> findById(Long id) {
+        if (id == null) {
+            return Optional.empty();
+        }
         MenuPO menuPO = menuMapper.selectById(id);
         return Optional.ofNullable(menuPersistenceAssembler.toEntity(menuPO));
     }
 
     @Override
     public Optional<MenuEntity> findByPermissionCode(String permissionCode) {
-        LambdaQueryWrapper<MenuPO> wrapper = Wrappers.lambdaQuery(MenuPO.class)
-                .eq(MenuPO::getPermissionCode, permissionCode);
+        if (permissionCode == null) {
+            return Optional.empty();
+        }
 
-        MenuPO menuPO = menuMapper.selectOne(wrapper);
+        MenuPO menuPO = menuMapper.selectOne(
+                Wrappers.lambdaQuery(MenuPO.class).eq(MenuPO::getPermissionCode, permissionCode)
+        );
         return Optional.ofNullable(menuPersistenceAssembler.toEntity(menuPO));
     }
 

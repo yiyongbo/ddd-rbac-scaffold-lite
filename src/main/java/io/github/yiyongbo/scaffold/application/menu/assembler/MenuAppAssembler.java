@@ -21,22 +21,34 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface MenuAppAssembler {
 
+    /**
+     * 创建菜单请求 转 菜单领域实体
+     */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuCreateCommand command);
 
+    /**
+     * 更新菜单请求 转 菜单领域实体
+     */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "codeToMenuType")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "codeToYesNo")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "codeToYesNo")
     MenuEntity toEntity(MenuUpdateCommand command);
 
+    /**
+     * 菜单领域实体 转 菜单DTO
+     */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
     @Mapping(target = "enabled", source = "enabled", qualifiedByName = "yesNoToCode")
     MenuDTO toDTO(MenuEntity entity);
 
+    /**
+     * 菜单领域实体 转 菜单树DTO
+     */
     @Mapping(target = "menuType", source = "menuType", qualifiedByName = "menuTypeToCode")
     @Mapping(target = "menuTypeDesc", source = "menuType", qualifiedByName = "menuTypeToDesc")
     @Mapping(target = "visible", source = "visible", qualifiedByName = "yesNoToCode")
