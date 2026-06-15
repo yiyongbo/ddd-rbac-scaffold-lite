@@ -35,11 +35,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuController {
 
+    private final MenuWebAssembler menuWebAssembler;
+
     private final MenuCommandService menuCommandService;
 
     private final MenuQueryService menuQueryService;
-
-    private final MenuWebAssembler menuWebAssembler;
 
     @Operation(summary = "创建菜单")
     @PostMapping

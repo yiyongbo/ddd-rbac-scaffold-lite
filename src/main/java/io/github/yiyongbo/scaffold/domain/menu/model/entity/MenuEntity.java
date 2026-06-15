@@ -89,11 +89,45 @@ public class MenuEntity {
      */
     private LocalDateTime updatedAt;
 
-    public boolean isRootMenu() {
+    public void validateMenuTypeFields() {
+        BizAssert.notNull(menuType, CommonResponseCode.PARAM_ERROR, "菜单类型不能为空");
+
+        switch (menuType) {
+            case DIR:
+                validateDirectoryFields(permissionCode);
+                break;
+            case MENU:
+                validateMenuFields(routePath, component);
+                break;
+            case BUTTON:
+                validateButtonFields(routePath, component, permissionCode);
+                break;
+            default:
+                throw BizAssert.newException(CommonResponseCode.PARAM_ERROR, "菜单类型不合法");
+        }
+    }
+
+    public boolean isRootParentMenu() {
         return MenuConstants.ROOT_PARENT_ID.equals(this.parentId);
     }
 
     public void validateParentNotSelf() {
         BizAssert.isTrue(!Objects.equals(this.id, this.parentId), CommonResponseCode.USER_ERROR, "父级菜单不能是当前菜单");
     }
+
+    private void validateDirectoryFields(String permissionCode) {
+        BizAssert.isBlank(permissionCode, CommonResponseCode.PARAM_ERROR, "目录类型菜单不能配置权限标识");
+    }
+
+    private void validateMenuFields(String routePath, String component) {
+        BizAssert.notBlank(routePath, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置路由地址");
+        BizAssert.notBlank(component, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置组件路径");
+    }
+
+    private void validateButtonFields(String routePath, String component, String permissionCode) {
+        BizAssert.isBlank(routePath, CommonResponseCode.PARAM_ERROR, "按钮类型不能配置路由地址");
+        BizAssert.isBlank(component, CommonResponseCode.PARAM_ERROR, "按钮类型不能配置组件路径");
+        BizAssert.notBlank(permissionCode, CommonResponseCode.PARAM_ERROR, "按钮类型必须配置权限标识");
+    }
+
 }
