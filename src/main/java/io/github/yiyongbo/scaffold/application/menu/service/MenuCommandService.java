@@ -9,6 +9,7 @@ import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
 import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
 import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
+import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MenuCommandService {
 
-    private final MenuRepository menuRepository;
+    private final MenuAppAssembler menuAppAssembler;
 
     private final MenuDomainService menuDomainService;
 
-    private final MenuAppAssembler menuAppAssembler;
+    private final MenuRepository menuRepository;
+    private final RoleRepository roleRepository;
+
 
     /**
      * 创建菜单
@@ -88,6 +91,9 @@ public class MenuCommandService {
         BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
 
         menuDomainService.validateDelete(id);
+
         menuRepository.delete(id);
+
+        roleRepository.deleteRoleMenuByMenuId(id);
     }
 }

@@ -100,4 +100,11 @@ public interface RoleRepository {
      * @return 角色是否全部存在
      */
     boolean existsAllByIds(List<Long> roleIds);
+
+    /**
+     * 根据菜单ID删除角色菜单权限
+     *
+     * @param menuId 菜单ID
+     */
+    void deleteRoleMenuByMenuId(Long menuId);
 }

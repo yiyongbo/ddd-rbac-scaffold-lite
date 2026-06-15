@@ -150,4 +150,11 @@ public class RoleRepositoryImpl implements RoleRepository {
 
         return count != null && count == roleIds.size();
     }
+
+    @Override
+    public void deleteRoleMenuByMenuId(Long menuId) {
+        roleMenuMapper.delete(
+                Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getMenuId, menuId)
+        );
+    }
 }
