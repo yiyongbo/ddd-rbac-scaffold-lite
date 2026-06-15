@@ -38,10 +38,22 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserRoleMapper userRoleMapper;
 
     @Override
+    public boolean existsByUsername(String username) {
+        if (StrUtil.isBlank(username)) {
+            return false;
+        }
+
+        Long count = userMapper.selectCount(Wrappers.lambdaQuery(UserPO.class).eq(UserPO::getUsername, username));
+
+        return count != null && count > 0;
+    }
+
+    @Override
     public Optional<UserEntity> findByUsername(String username) {
         if (StrUtil.isBlank(username)) {
             return Optional.empty();
         }
+
         UserPO userPO = userMapper.selectOne(Wrappers.lambdaQuery(UserPO.class).eq(UserPO::getUsername, username));
 
         return Optional.ofNullable(userPO).map(userPersistenceAssembler::toEntity);

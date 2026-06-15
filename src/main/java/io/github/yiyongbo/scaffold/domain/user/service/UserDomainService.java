@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 系统用户领域服务
@@ -30,8 +29,10 @@ public class UserDomainService {
      */
     public void validateCreate(UserEntity user) {
         BizAssert.notNull(user, CommonResponseCode.PARAM_ERROR, "用户信息不能为空");
+        BizAssert.isTrue(StrUtil.isNotBlank(user.getUsername()), CommonResponseCode.PARAM_ERROR, "用户名不能为空");
 
-        validateUsernameUnique(null, user.getUsername());
+        boolean existUser = userRepository.existsByUsername(user.getUsername());
+        BizAssert.isTrue(!existUser, CommonResponseCode.USER_ERROR, "用户名已存在");
     }
 
     /**
@@ -83,12 +84,4 @@ public class UserDomainService {
         BizAssert.isTrue(existUser, CommonResponseCode.NOT_FOUND, "用户不存在");
     }
 
-    private void validateUsernameUnique(Long id, String username) {
-        BizAssert.isTrue(StrUtil.isNotBlank(username), CommonResponseCode.PARAM_ERROR, "用户名不能为空");
-
-        boolean existsSameUsername = userRepository.findByUsername(username)
-                .filter(user -> !Objects.equals(user.getId(), id))
-                .isPresent();
-        BizAssert.isTrue(!existsSameUsername, CommonResponseCode.USER_ERROR, "用户名已存在");
-    }
 }

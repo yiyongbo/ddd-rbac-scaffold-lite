@@ -16,6 +16,14 @@ import java.util.Optional;
 public interface UserRepository {
 
     /**
+     * 根据用户名判断用户是否存在
+     *
+     * @param username 用户名
+     * @return 用户是否存在
+     */
+    boolean existsByUsername(String username);
+
+    /**
      * 根据用户名查询用户
      *
      * @param username 用户名
