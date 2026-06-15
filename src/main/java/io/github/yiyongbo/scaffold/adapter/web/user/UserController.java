@@ -1,12 +1,10 @@
 package io.github.yiyongbo.scaffold.adapter.web.user;
 
 import io.github.yiyongbo.scaffold.adapter.web.user.assembler.UserWebAssembler;
-import io.github.yiyongbo.scaffold.adapter.web.user.request.UserAssignRolesRequest;
-import io.github.yiyongbo.scaffold.adapter.web.user.request.UserCreateRequest;
-import io.github.yiyongbo.scaffold.adapter.web.user.request.UserPageRequest;
-import io.github.yiyongbo.scaffold.adapter.web.user.request.UserUpdateRequest;
+import io.github.yiyongbo.scaffold.adapter.web.user.request.*;
 import io.github.yiyongbo.scaffold.adapter.web.user.response.UserPageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.user.response.UserResponse;
+import io.github.yiyongbo.scaffold.application.user.command.UserChangePasswordCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserCreateCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.application.user.dto.UserDTO;
@@ -39,10 +37,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserWebAssembler userWebAssembler;
+
     private final UserCommandService userCommandService;
     private final UserQueryService userQueryService;
-
-    private final UserWebAssembler userWebAssembler;
 
     @Operation(summary = "创建用户")
     @PostMapping
@@ -57,8 +55,34 @@ public class UserController {
     public Result<Void> update(
             @Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request) {
+
         UserUpdateCommand updateCommand = userWebAssembler.toUpdateCommand(id, request);
         userCommandService.update(updateCommand);
+        return Result.success();
+    }
+
+    @Operation(summary = "重置用户密码")
+    @PutMapping("/{id}/password/reset")
+    public Result<Void> resetPassword(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
+        userCommandService.resetPassword(id);
+        return Result.success();
+    }
+
+    @Operation(summary = "更新用户密码")
+    @PutMapping("/{id}/password")
+    public Result<Void> changePassword(
+            @Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id,
+            @Valid @RequestBody UserChangePasswordRequest request) {
+
+        UserChangePasswordCommand changePasswordCommand = userWebAssembler.toChangePasswordCommand(id, request);
+        userCommandService.changePassword(changePasswordCommand);
+        return Result.success();
+    }
+
+    @Operation(summary = "切换用户启用状态")
+    @PutMapping("/{id}/enabled/toggle")
+    public Result<Void> toggleEnabled(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
+        userCommandService.toggleEnabled(id);
         return Result.success();
     }
 

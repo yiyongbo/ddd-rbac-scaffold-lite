@@ -49,10 +49,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Long save(UserEntity user) {
-        if (user == null) {
-            return null;
-        }
-
         UserPO userPO = userPersistenceAssembler.toPO(user);
         userMapper.insert(userPO);
         return userPO.getId();
@@ -71,29 +67,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateById(UserEntity user) {
-        if (user == null || user.getId() == null) {
-            return;
-        }
-
         UserPO userPO = userPersistenceAssembler.toPO(user);
         userMapper.updateById(userPO);
     }
 
     @Override
     public void deleteById(Long id) {
-        if (id == null) {
-            return;
-        }
-
         userMapper.deleteById(id);
     }
 
     @Override
     public void replaceUserRoles(Long userId, List<Long> roleIds) {
-        if (userId == null) {
-            return;
-        }
-
         // 删除用户关联的角色
         userRoleMapper.delete(Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getUserId, userId));
 
@@ -140,9 +124,30 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void deleteUserRolesByRoleId(Long roleId) {
+    public void deleteUserRoleByRoleId(Long roleId) {
         userRoleMapper.delete(
                 Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getRoleId, roleId)
+        );
+    }
+
+    @Override
+    public void deleteUserRoleByUserId(Long userId) {
+        userRoleMapper.delete(
+                Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getUserId, userId)
+        );
+    }
+
+    @Override
+    public void updatePasswordById(Long id, String changedPassword) {
+        userMapper.update(
+                Wrappers.lambdaUpdate(UserPO.class).set(UserPO::getPassword, changedPassword).eq(UserPO::getId, id)
+        );
+    }
+
+    @Override
+    public void updateEnabledById(Long id, Integer enabled) {
+        userMapper.update(
+                Wrappers.lambdaUpdate(UserPO.class).set(UserPO::getEnabled, enabled).eq(UserPO::getId, id)
         );
     }
 }

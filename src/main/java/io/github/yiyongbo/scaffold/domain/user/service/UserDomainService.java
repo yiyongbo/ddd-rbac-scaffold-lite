@@ -31,7 +31,7 @@ public class UserDomainService {
     public void validateCreate(UserEntity user) {
         BizAssert.notNull(user, CommonResponseCode.PARAM_ERROR, "用户信息不能为空");
 
-        validateUsername(null, user.getUsername());
+        validateUsernameUnique(null, user.getUsername());
     }
 
     /**
@@ -42,25 +42,16 @@ public class UserDomainService {
     public void validateUpdate(UserEntity user) {
         BizAssert.notNull(user, CommonResponseCode.PARAM_ERROR, "用户信息不能为空");
 
-        boolean existUser = userRepository.existsById(user.getId());
-        BizAssert.isTrue(existUser, CommonResponseCode.NOT_FOUND, "用户不存在");
-
-        validateUsername(user.getId(), user.getUsername());
+        validateUserExists(user.getId());
     }
 
-    /**
-     * 验证用户名
-     *
-      * @param id 用户ID
-      * @param username 用户名
-     */
-    private void validateUsername(Long id, String username) {
-        BizAssert.isTrue(StrUtil.isNotBlank(username), CommonResponseCode.PARAM_ERROR, "用户名不能为空");
+    public void validateChangePassword(String oldPassword, String newPassword, String confirmPassword) {
+        BizAssert.isTrue(StrUtil.isNotBlank(oldPassword), CommonResponseCode.PARAM_ERROR, "旧密码不能为空");
+        BizAssert.isTrue(StrUtil.isNotBlank(newPassword), CommonResponseCode.PARAM_ERROR, "新密码不能为空");
+        BizAssert.isTrue(StrUtil.isNotBlank(confirmPassword), CommonResponseCode.PARAM_ERROR, "确认密码不能为空");
 
-        boolean existsSameUsername = userRepository.findByUsername(username)
-                .filter(user -> !Objects.equals(user.getId(), id))
-                .isPresent();
-        BizAssert.isTrue(!existsSameUsername, CommonResponseCode.USER_ERROR, "用户名已存在");
+        BizAssert.isTrue(!newPassword.equals(oldPassword), CommonResponseCode.PARAM_ERROR, "新密码不能与旧密码相同");
+        BizAssert.isTrue(newPassword.equals(confirmPassword), CommonResponseCode.PARAM_ERROR, "新密码和确认密码不一致");
     }
 
     /**
@@ -69,10 +60,7 @@ public class UserDomainService {
      * @param id 用户ID
      */
     public void validateDelete(Long id) {
-        BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "用户ID不能为空");
-
-        boolean existUser = userRepository.existsById(id);
-        BizAssert.isTrue(existUser, CommonResponseCode.NOT_FOUND, "用户不存在");
+        validateUserExists(id);
     }
 
     /**
@@ -82,13 +70,25 @@ public class UserDomainService {
      * @param roleIds 角色ID列表
      */
     public void validateAssignRoles(Long id, List<Long> roleIds) {
-        BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "用户ID不能为空");
-
         long distinctCount = roleIds.stream().distinct().count();
         BizAssert.isTrue(distinctCount == roleIds.size(), CommonResponseCode.PARAM_ERROR, "角色ID列表不能重复");
 
+        validateUserExists(id);
+    }
+
+    private void validateUserExists(Long id) {
+        BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "用户ID不能为空");
+
         boolean existUser = userRepository.existsById(id);
         BizAssert.isTrue(existUser, CommonResponseCode.NOT_FOUND, "用户不存在");
+    }
 
+    private void validateUsernameUnique(Long id, String username) {
+        BizAssert.isTrue(StrUtil.isNotBlank(username), CommonResponseCode.PARAM_ERROR, "用户名不能为空");
+
+        boolean existsSameUsername = userRepository.findByUsername(username)
+                .filter(user -> !Objects.equals(user.getId(), id))
+                .isPresent();
+        BizAssert.isTrue(!existsSameUsername, CommonResponseCode.USER_ERROR, "用户名已存在");
     }
 }

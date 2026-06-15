@@ -23,16 +23,6 @@ public class UserCreateRequest {
     @Schema(description = "用户名")
     private String username;
 
-    @NotBlank(message = "密码不能为空")
-    @Size(max = 32, message = "密码长度不能超过32")
-    @Schema(description = "密码")
-    private String password;
-
-    @NotBlank(message = "确认密码不能为空")
-    @Size(max = 32, message = "确认密码长度不能超过32")
-    @Schema(description = "确认密码")
-    private String rePassword;
-
     @Size(max = 64, message = "用户昵称长度不能超过64")
     @Schema(description = "用户昵称")
     private String nickname;

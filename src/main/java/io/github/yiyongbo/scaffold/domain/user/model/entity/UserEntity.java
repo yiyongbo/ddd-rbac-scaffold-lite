@@ -63,4 +63,8 @@ public class UserEntity {
      * 更新时间
      */
     private LocalDateTime updatedAt;
+
+    public void toggleEnabled() {
+        this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
+    }
 }

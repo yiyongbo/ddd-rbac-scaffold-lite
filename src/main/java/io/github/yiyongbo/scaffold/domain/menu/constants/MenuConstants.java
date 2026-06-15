@@ -1,7 +1,7 @@
 package io.github.yiyongbo.scaffold.domain.menu.constants;
 
 /**
- * 菜单领域藏粮类
+ * 菜单领域常量类
  *
  * @author kidd
  * @since 2026/6/9 09:42

@@ -89,5 +89,28 @@ public interface UserRepository {
      *
      * @param roleId 角色ID
      */
-    void deleteUserRolesByRoleId(Long roleId);
+    void deleteUserRoleByRoleId(Long roleId);
+
+    /**
+     * 根据用户ID删除用户角色
+     *
+     * @param userId 用户ID
+     */
+    void deleteUserRoleByUserId(Long userId);
+
+    /**
+     * 根据ID更新用户密码
+     *
+     * @param id 用户ID
+      * @param changedPassword 更新后的密码
+     */
+    void updatePasswordById(Long id, String changedPassword);
+
+    /**
+     * 根据ID更新用户启用状态
+     *
+     * @param id 用户ID
+     * @param enabled 启用状态
+     */
+    void updateEnabledById(Long id, Integer enabled);
 }

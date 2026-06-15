@@ -99,7 +99,7 @@ public class RoleCommandService {
 
         roleRepository.deleteRoleMenuByRoleId(id);
 
-        userRepository.deleteUserRolesByRoleId(id);
+        userRepository.deleteUserRoleByRoleId(id);
     }
 
     /**

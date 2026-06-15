@@ -17,16 +17,6 @@ public class UserCreateCommand {
     private String username;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 确认密码
-     */
-    private String rePassword;
-
-    /**
      * 用户昵称
      */
     private String nickname;

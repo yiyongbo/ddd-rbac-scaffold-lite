@@ -1,10 +1,12 @@
 package io.github.yiyongbo.scaffold.adapter.web.user.assembler;
 
+import io.github.yiyongbo.scaffold.adapter.web.user.request.UserChangePasswordRequest;
 import io.github.yiyongbo.scaffold.adapter.web.user.request.UserCreateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.user.request.UserPageRequest;
 import io.github.yiyongbo.scaffold.adapter.web.user.request.UserUpdateRequest;
 import io.github.yiyongbo.scaffold.adapter.web.user.response.UserPageResponse;
 import io.github.yiyongbo.scaffold.adapter.web.user.response.UserResponse;
+import io.github.yiyongbo.scaffold.application.user.command.UserChangePasswordCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserCreateCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.application.user.dto.UserDTO;
@@ -62,4 +64,10 @@ public interface UserWebAssembler {
                 page.getPageSize()
         );
     }
+
+    /**
+     * 修改密码请求 转 修改密码命令
+     */
+    @Mapping(target = "id", source = "id")
+    UserChangePasswordCommand toChangePasswordCommand(Long id, UserChangePasswordRequest request);
 }
