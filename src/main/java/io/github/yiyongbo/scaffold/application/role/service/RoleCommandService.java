@@ -10,6 +10,7 @@ import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
 import io.github.yiyongbo.scaffold.domain.role.model.entity.RoleEntity;
 import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
+import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleCommandService {
 
+    private final RoleAppAssembler roleAppAssembler;
+
     private final RoleDomainService roleDomainService;
     private final MenuDomainService menuDomainService;
 
     private final RoleRepository roleRepository;
-
-    private final RoleAppAssembler roleAppAssembler;
+    private final UserRepository userRepository;
 
     /**
      * 创建角色
@@ -94,6 +96,10 @@ public class RoleCommandService {
         roleDomainService.validateDelete(id);
 
         roleRepository.deleteById(id);
+
+        roleRepository.deleteRoleMenuByRoleId(id);
+
+        userRepository.deleteUserRolesByRoleId(id);
     }
 
     /**

@@ -138,4 +138,11 @@ public class UserRepositoryImpl implements UserRepository {
         List<UserRolePO> userRoles = userRoleMapper.selectList(Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getUserId, userId));
         return userRoles.stream().map(UserRolePO::getRoleId).toList();
     }
+
+    @Override
+    public void deleteUserRolesByRoleId(Long roleId) {
+        userRoleMapper.delete(
+                Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getRoleId, roleId)
+        );
+    }
 }

@@ -107,4 +107,11 @@ public interface RoleRepository {
      * @param menuId 菜单ID
      */
     void deleteRoleMenuByMenuId(Long menuId);
+
+    /**
+     * 根据角色ID删除角色菜单权限
+     *
+     * @param roleId 角色ID
+     */
+    void deleteRoleMenuByRoleId(Long roleId);
 }

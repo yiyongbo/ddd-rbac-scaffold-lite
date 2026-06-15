@@ -83,4 +83,11 @@ public interface UserRepository {
      * @return 角色ID列表
      */
     List<Long> listRoleIds(Long userId);
+
+    /**
+     * 根据角色ID删除用户角色
+     *
+     * @param roleId 角色ID
+     */
+    void deleteUserRolesByRoleId(Long roleId);
 }

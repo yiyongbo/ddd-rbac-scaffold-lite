@@ -157,4 +157,11 @@ public class RoleRepositoryImpl implements RoleRepository {
                 Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getMenuId, menuId)
         );
     }
+
+    @Override
+    public void deleteRoleMenuByRoleId(Long roleId) {
+        roleMenuMapper.delete(
+                Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getRoleId, roleId)
+        );
+    }
 }
