@@ -8,11 +8,11 @@ import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import io.github.yiyongbo.scaffold.domain.user.constants.UserConstants;
+import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordService;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;
 import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
 import io.github.yiyongbo.scaffold.domain.user.service.UserDomainService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,7 @@ public class UserCommandService {
 
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordService passwordService;
 
     /**
      * 创建用户
@@ -52,7 +52,7 @@ public class UserCommandService {
         userDomainService.validateCreate(user);
 
         // 设置默认密码
-        String encodePassword = bCryptPasswordEncoder.encode(UserConstants.USER_DEFAULT_PASSWORD);
+        String encodePassword = passwordService.encode(UserConstants.USER_DEFAULT_PASSWORD);
         user.setPassword(encodePassword);
 
         return userRepository.save(user);
@@ -87,7 +87,7 @@ public class UserCommandService {
         BizAssert.isTrue(existsUser, CommonResponseCode.NOT_FOUND, "用户不存在");
 
         // 默认密码
-        String changedPassword = bCryptPasswordEncoder.encode(UserConstants.USER_DEFAULT_PASSWORD);
+        String changedPassword = passwordService.encode(UserConstants.USER_DEFAULT_PASSWORD);
 
         userRepository.updatePasswordById(id, changedPassword);
     }
@@ -104,12 +104,12 @@ public class UserCommandService {
         UserEntity user = userRepository.findById(command.getId())
                 .orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "用户不存在"));
 
-        boolean isOldPasswordMatch = bCryptPasswordEncoder.matches(command.getOldPassword(), user.getPassword());
+        boolean isOldPasswordMatch = passwordService.matches(command.getOldPassword(), user.getPassword());
         BizAssert.isTrue(isOldPasswordMatch, CommonResponseCode.PARAM_ERROR, "原密码错误");
 
         userDomainService.validateChangePassword(command.getOldPassword(), command.getNewPassword(), command.getConfirmPassword());
 
-        String changedPassword = bCryptPasswordEncoder.encode(command.getNewPassword());
+        String changedPassword = passwordService.encode(command.getNewPassword());
 
         userRepository.updatePasswordById(command.getId(), changedPassword);
     }
