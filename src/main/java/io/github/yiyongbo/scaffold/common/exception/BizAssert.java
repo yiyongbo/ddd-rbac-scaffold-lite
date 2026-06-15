@@ -1,5 +1,6 @@
 package io.github.yiyongbo.scaffold.common.exception;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.response.ResponseCode;
 import lombok.AccessLevel;
@@ -14,10 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BizAssert {
 
-    public static void isTrue(boolean expression, ResponseCode responseCode) {
-        if (!expression) {
-            throw new BizException(responseCode);
-        }
+    public static BizException newException(ResponseCode responseCode, String message) {
+        return new BizException(responseCode, message);
     }
 
     public static void isTrue(boolean expression, ResponseCode responseCode, String message) {
@@ -26,14 +25,20 @@ public final class BizAssert {
         }
     }
 
-    public static void notNull(Object object, String message) {
+    public static void notNull(Object object, ResponseCode responseCode, String message) {
         if (object == null) {
-            throw new BizException(CommonResponseCode.NOT_FOUND, message);
+            throw new BizException(responseCode, message);
         }
     }
 
-    public static void notNull(Object object, ResponseCode responseCode, String message) {
-        if (object == null) {
+    public static void isBlank(String str, CommonResponseCode responseCode, String message) {
+        if (StrUtil.isNotBlank(str)) {
+            throw new BizException(responseCode, message);
+        }
+    }
+
+    public static void notBlank(String str, CommonResponseCode responseCode, String message) {
+        if (StrUtil.isBlank(str)) {
             throw new BizException(responseCode, message);
         }
     }

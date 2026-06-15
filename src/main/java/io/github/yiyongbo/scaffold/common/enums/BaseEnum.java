@@ -14,8 +14,8 @@ public interface BaseEnum<C> {
     C getCode();
 
     /**
-     * 获取枚举名称
+     * 获取枚举描述
      */
-    String getName();
+    String getDesc();
 
 }

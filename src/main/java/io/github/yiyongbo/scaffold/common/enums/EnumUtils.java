@@ -17,7 +17,7 @@ public final class EnumUtils {
     /**
      * 根据编码获取枚举
      */
-    static <C, E extends Enum<E> & BaseEnum<C>> E getByCode(Class<E> enumClass, C code) {
+    public static <C, E extends Enum<E> & BaseEnum<C>> E getByCode(Class<E> enumClass, C code) {
         if (enumClass == null || code == null) {
             return null;
         }
@@ -39,15 +39,15 @@ public final class EnumUtils {
     /**
      * 根据编码获取枚举名称
      */
-    static <C, E extends Enum<E> & BaseEnum<C>> String getNameByCode(Class<E> enumClass, C code) {
+    public static <C, E extends Enum<E> & BaseEnum<C>> String getDescByCode(Class<E> enumClass, C code) {
         E item = getByCode(enumClass, code);
-        return item == null ? null : item.getName();
+        return item == null ? null : item.getDesc();
     }
 
     /**
      * 判断编码是否合法
      */
-    static <C, E extends Enum<E> & BaseEnum<C>> boolean isValidCode(Class<E> enumClass, C code) {
+    public static <C, E extends Enum<E> & BaseEnum<C>> boolean isValidCode(Class<E> enumClass, C code) {
         return getByCode(enumClass, code) != null;
     }
 }

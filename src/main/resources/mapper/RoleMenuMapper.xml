@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.yiyongbo.scaffold.infrastructure.persistence.role.mapper.RoleMenuMapper">
+
+    <insert id="insertBatch">
+        insert into sys_role_menu (role_id, menu_id, create_at) values
+        <foreach collection="menuIds" item="menuId" separator=",">
+            (#{roleId}, #{menuId}, #{createAt})
+        </foreach>
+    </insert>
+
+</mapper>
