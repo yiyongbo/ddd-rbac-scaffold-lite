@@ -1,11 +1,11 @@
 package io.github.yiyongbo.scaffold.common.page;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,47 +20,38 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PageResult<T> {
 
-    /**
-     * 数据列表
-     */
+    @Schema(description = "数据列表")
     private List<T> records;
 
-    /**
-     * 总条数
-     */
+    @Schema(description = "总条数", example = "100")
     private Long total;
 
-    /**
-     * 页码
-     */
-    private Long pageNo;
-
-    /**
-     * 每页条数
-     */
-    private Long pageSize;
-
-    /**
-     * 总页数
-     */
+    @Schema(description = "总页数", example = "10")
     private Long pages;
 
-    public static <T> PageResult<T> of(List<T> records, Long total, Long pageNo, Long pageSize) {
+    @Schema(description = "当前页码", example = "1")
+    private Long pageNum;
+
+    @Schema(description = "每页条数", example = "10")
+    private Long pageSize;
+
+
+    public static <T> PageResult<T> of(List<T> records, Long total, Long pageNum, Long pageSize) {
         long safeTotal = total == null ? 0L : total;
-        long safePageNo = pageNo == null ? 1L : pageNo;
+        long safePageNum = pageNum == null ? 1L : pageNum;
         long safePageSize = pageSize == null || pageSize <= 0 ? 10L : pageSize;
 
         return new PageResult<>(
-                records == null ? Collections.emptyList() : records,
+                records == null ? List.of() : records,
                 safeTotal,
-                safePageNo,
+                safePageNum,
                 safePageSize,
                 calculatePages(safeTotal, safePageSize)
         );
     }
 
-    public static <T> PageResult<T> empty(Long pageNo, Long pageSize) {
-        return of(Collections.emptyList(), 0L, pageNo, pageSize);
+    public static <T> PageResult<T> empty(Long pageNum, Long pageSize) {
+        return of(List.of(), 0L, pageNum, pageSize);
     }
 
     private static Long calculatePages(Long total, Long pageSize) {

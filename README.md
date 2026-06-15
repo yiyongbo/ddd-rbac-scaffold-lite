@@ -68,7 +68,7 @@ src/main/java/cn/seepeak/scaffold
 
 ```text
 adapter.web.Controller
-  -> application.XxxApplicationService
+  -> application.XxxCommandService
   -> domain.model / domain.service
   -> domain.repository / domain.gateway
   -> infrastructure.persistence / cache / gateway / acl
@@ -98,8 +98,8 @@ adapter.web.Controller
 后续将逐步完善：
 
 - 基础通用能力；
-- Spring Security + JWT 登录认证；
 - 用户、角色、菜单、权限管理；
+- Spring Security + JWT 登录认证；
 - 操作日志、登录日志；
 - Docker Compose 与初始化 SQL；
 - 项目文档和开发指南。

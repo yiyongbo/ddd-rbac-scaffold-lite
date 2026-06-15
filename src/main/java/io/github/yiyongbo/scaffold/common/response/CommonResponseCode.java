@@ -28,10 +28,13 @@ public enum CommonResponseCode implements ResponseCode {
     UNSUPPORTED_MEDIA_TYPE("A0415", "请求媒体类型不支持"),
 
 
+
     // 系统执行错误
     SYSTEM_ERROR("B0001", "系统执行错误"),
     INTERNAL_ERROR("B0500", "系统内部错误"),
     SERVICE_UNAVAILABLE("B0503", "服务不可用"),
+
+
 
     // 第三方服务错误
     THIRD_PARTY_ERROR("C0001", "第三方服务异常"),

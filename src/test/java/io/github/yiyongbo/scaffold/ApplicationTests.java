@@ -1,4 +1,4 @@
-package io.github.yiyongbo;
+package io.github.yiyongbo.scaffold;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
