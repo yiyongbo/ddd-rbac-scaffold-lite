@@ -36,7 +36,6 @@ public class MenuDomainService {
      */
     public void validateCreate(MenuEntity menu) {
         BizAssert.notNull(menu, CommonResponseCode.PARAM_ERROR, "菜单不能为空");
-        BizAssert.notNull(menu.getParentId(), CommonResponseCode.PARAM_ERROR, "父级菜单ID不能为空");
 
         // 校验菜单类型字段
         menu.validateMenuTypeFields();
@@ -53,14 +52,11 @@ public class MenuDomainService {
      */
     public void validateUpdate(MenuEntity menu) {
         BizAssert.notNull(menu, CommonResponseCode.PARAM_ERROR, "菜单不能为空");
-        BizAssert.notNull(menu.getId(), CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
-        BizAssert.notNull(menu.getParentId(), CommonResponseCode.PARAM_ERROR, "父级菜单ID不能为空");
 
         // 校验菜单类型字段
         menu.validateMenuTypeFields();
-
+        // 校验菜单是否存在
         validateMenuExist(menu.getId());
-
         // 校验父级菜单
         validateParent(menu);
         // 校验权限标识唯一性
@@ -73,8 +69,6 @@ public class MenuDomainService {
      * @param id 菜单ID
      */
     public void validateDelete(Long id) {
-        BizAssert.notNull(id, CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
-
         validateMenuExist(id);
 
         boolean existsChildMenu = menuRepository.existsByParentId(id);
@@ -96,11 +90,15 @@ public class MenuDomainService {
     }
 
     private void validateMenuExist(Long menuId) {
+        BizAssert.notNull(menuId, CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
+
         boolean existsMenu = menuRepository.existsById(menuId);
         BizAssert.isTrue(existsMenu, CommonResponseCode.NOT_FOUND, "菜单不存在");
     }
 
     private void validateParent(MenuEntity menu) {
+        BizAssert.notNull(menu.getParentId(), CommonResponseCode.PARAM_ERROR, "父级菜单ID不能为空");
+
         // 校验父级菜单不能是自己
         menu.validateParentNotSelf();
 
