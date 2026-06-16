@@ -12,6 +12,7 @@ import lombok.Data;
  * @since 2026/6/15 15:39
  */
 @Data
+@Schema(description = "修改系统用户密码请求")
 public class UserChangePasswordRequest {
 
     @NotBlank(message = "旧密码不能为空")

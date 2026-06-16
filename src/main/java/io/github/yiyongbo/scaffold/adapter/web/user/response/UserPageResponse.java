@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * @since 2026/6/14 22:32
  */
 @Data
+@Schema(description = "用户分页响应")
 public class UserPageResponse {
 
     @Schema(description = "用户ID")
