@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.common.config.security;
+package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

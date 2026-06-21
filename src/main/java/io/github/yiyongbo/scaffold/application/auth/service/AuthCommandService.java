@@ -4,7 +4,7 @@ import io.github.yiyongbo.scaffold.application.auth.command.LoginCommand;
 import io.github.yiyongbo.scaffold.application.auth.dto.LoginResultDTO;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
-import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayload;
+import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
 import io.github.yiyongbo.scaffold.domain.common.gateway.TokenGateway;
 import io.github.yiyongbo.scaffold.domain.common.gateway.PasswordGateway;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;
@@ -42,7 +42,7 @@ public class AuthCommandService {
         boolean passwordMatched = passwordGateway.matches(command.getPassword(), user.getPassword());
         BizAssert.isTrue(passwordMatched, CommonResponseCode.UNAUTHORIZED, "账号或密码错误");
 
-        TokenPayload tokenPayload = TokenPayload.builder()
+        TokenPayloadValueObject tokenPayload = TokenPayloadValueObject.builder()
                 .userId(user.getId())
                 .username(user.getUsername())
                 .build();

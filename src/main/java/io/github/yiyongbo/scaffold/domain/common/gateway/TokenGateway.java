@@ -1,6 +1,6 @@
 package io.github.yiyongbo.scaffold.domain.common.gateway;
 
-import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayload;
+import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
 
 /**
  * Token Gateway
@@ -16,7 +16,7 @@ public interface TokenGateway {
      * @param payload 令牌Payload
      * @return 访问令牌
      */
-    String generateAccessToken(TokenPayload payload);
+    String generateAccessToken(TokenPayloadValueObject payload);
 
     /**
      * 解析访问令牌
@@ -24,7 +24,7 @@ public interface TokenGateway {
      * @param accessToken 访问令牌
      * @return 令牌Payload
      */
-    TokenPayload parseAccessToken(String accessToken);
+    TokenPayloadValueObject parseAccessToken(String accessToken);
 
     /**
      * 获取访问令牌过期时间

@@ -1,6 +1,7 @@
 package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSVerifier;
@@ -8,11 +9,10 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import io.github.yiyongbo.scaffold.common.config.security.JwtProperties;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.exception.BizException;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
-import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayload;
+import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
 import io.github.yiyongbo.scaffold.domain.common.gateway.TokenGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class NimbusTokenGateway implements TokenGateway {
     private final JwtProperties jwtProperties;
 
     @Override
-    public String generateAccessToken(TokenPayload payload) {
+    public String generateAccessToken(TokenPayloadValueObject payload) {
         validatePayload(payload);
 
         Instant now = Instant.now();
@@ -45,13 +45,15 @@ public class NimbusTokenGateway implements TokenGateway {
 
         JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.HS256).build();
 
+        String jti = StrUtil.isNotBlank(payload.getJti()) ? payload.getJti() : IdUtil.fastUUID();
+
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .issuer(jwtProperties.getIssuer())
                 .subject(String.valueOf(payload.getUserId()))
+                .jwtID(jti)
                 .claim(CLAIM_USERNAME, payload.getUsername())
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(expireAt))
-                .jwtID(IdUtil.fastUUID())
                 .build();
 
         SignedJWT signedJWT = new SignedJWT(jwsHeader, claimsSet);
@@ -65,7 +67,7 @@ public class NimbusTokenGateway implements TokenGateway {
     }
 
     @Override
-    public TokenPayload parseAccessToken(String accessToken) {
+    public TokenPayloadValueObject parseAccessToken(String accessToken) {
         BizAssert.isNotBlank(accessToken, CommonResponseCode.UNAUTHORIZED, "访问令牌不能为空");
         try {
             SignedJWT signedJWT = SignedJWT.parse(accessToken);
@@ -76,7 +78,8 @@ public class NimbusTokenGateway implements TokenGateway {
             JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
             validateClaims(claimsSet);
 
-            return TokenPayload.builder()
+            return TokenPayloadValueObject.builder()
+                    .jti(claimsSet.getJWTID())
                     .userId(Long.valueOf(claimsSet.getSubject()))
                     .username(claimsSet.getStringClaim(CLAIM_USERNAME))
                     .build();
@@ -90,7 +93,7 @@ public class NimbusTokenGateway implements TokenGateway {
         return jwtProperties.getAccessTokenExpireSeconds();
     }
 
-    private void validatePayload(TokenPayload payload) {
+    private void validatePayload(TokenPayloadValueObject payload) {
         BizAssert.notNull(payload, CommonResponseCode.INTERNAL_ERROR, "Token载荷不能为空");
         BizAssert.notNull(payload.getUserId(), CommonResponseCode.INTERNAL_ERROR, "Token用户ID不能为空");
         BizAssert.isNotBlank(payload.getUsername(), CommonResponseCode.INTERNAL_ERROR, "Token用户名不能为空");
@@ -116,6 +119,7 @@ public class NimbusTokenGateway implements TokenGateway {
     }
 
     private void validateClaims(JWTClaimsSet claimsSet) throws ParseException {
+        BizAssert.isNotBlank(claimsSet.getJWTID(), CommonResponseCode.UNAUTHORIZED, "访问令牌无效");
         BizAssert.isTrue(jwtProperties.getIssuer().equals(claimsSet.getIssuer()), CommonResponseCode.UNAUTHORIZED, "访问令牌无效");
         BizAssert.isNotBlank(claimsSet.getSubject(), CommonResponseCode.UNAUTHORIZED, "访问令牌无效");
         BizAssert.isNotBlank(claimsSet.getStringClaim(CLAIM_USERNAME), CommonResponseCode.UNAUTHORIZED, "访问令牌无效");

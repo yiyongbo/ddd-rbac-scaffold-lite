@@ -15,7 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenPayload {
+public class TokenPayloadValueObject {
+
+    /**
+     * Token 唯一标识
+     */
+    private String jti;
 
     /**
      * 用户ID
