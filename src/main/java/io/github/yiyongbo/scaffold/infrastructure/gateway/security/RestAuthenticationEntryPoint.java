@@ -1,8 +1,8 @@
 package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.response.Result;
+import io.github.yiyongbo.scaffold.common.util.JsonUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,17 +25,16 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        Result<Object> result = Result.fail(CommonResponseCode.UNAUTHORIZED);
+        Result<Void> failResult = Result.fail(CommonResponseCode.UNAUTHORIZED);
+        String resultStr = JsonUtils.toJsonString(failResult);
 
-        response.getWriter().write(objectMapper.writeValueAsString(result));
+        response.getWriter().write(resultStr);
     }
 
 }

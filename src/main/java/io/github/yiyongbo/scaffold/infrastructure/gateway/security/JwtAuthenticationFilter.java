@@ -1,10 +1,10 @@
 package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.response.Result;
 import io.github.yiyongbo.scaffold.common.security.LoginUser;
+import io.github.yiyongbo.scaffold.common.util.JsonUtils;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
 import io.github.yiyongbo.scaffold.domain.common.gateway.TokenGateway;
 import jakarta.servlet.FilterChain;
@@ -38,8 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenGateway tokenGateway;
-
-    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -94,6 +92,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Result<Void> result = Result.fail(CommonResponseCode.UNAUTHORIZED);
-        response.getWriter().write(objectMapper.writeValueAsString(result));
+        response.getWriter().write(JsonUtils.toJsonString(result));
     }
 }
