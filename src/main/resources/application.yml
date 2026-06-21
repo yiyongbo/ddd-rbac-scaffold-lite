@@ -28,6 +28,12 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
 
+security:
+  jwt:
+    issuer: ddd-rbac-scaffold-lite
+    secret: ${JWT_SECRET:please-change-this-secret-key}
+    access-token-expire-seconds: 7200
+
 logging:
   file:
     path: ./logs

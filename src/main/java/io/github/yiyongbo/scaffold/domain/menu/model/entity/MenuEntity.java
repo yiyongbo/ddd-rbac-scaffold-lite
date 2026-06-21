@@ -121,14 +121,14 @@ public class MenuEntity {
     }
 
     private void validateMenuFields(String routePath, String component) {
-        BizAssert.notBlank(routePath, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置路由地址");
-        BizAssert.notBlank(component, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置组件路径");
+        BizAssert.isNotBlank(routePath, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置路由地址");
+        BizAssert.isNotBlank(component, CommonResponseCode.PARAM_ERROR, "菜单类型必须配置组件路径");
     }
 
     private void validateButtonFields(String routePath, String component, String permissionCode) {
         BizAssert.isBlank(routePath, CommonResponseCode.PARAM_ERROR, "按钮类型不能配置路由地址");
         BizAssert.isBlank(component, CommonResponseCode.PARAM_ERROR, "按钮类型不能配置组件路径");
-        BizAssert.notBlank(permissionCode, CommonResponseCode.PARAM_ERROR, "按钮类型必须配置权限标识");
+        BizAssert.isNotBlank(permissionCode, CommonResponseCode.PARAM_ERROR, "按钮类型必须配置权限标识");
     }
 
 }

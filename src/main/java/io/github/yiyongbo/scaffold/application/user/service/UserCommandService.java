@@ -6,9 +6,9 @@ import io.github.yiyongbo.scaffold.application.user.command.UserCreateCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.domain.common.gateway.PasswordGateway;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import io.github.yiyongbo.scaffold.domain.user.constants.UserConstants;
-import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordService;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;
 import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
 import io.github.yiyongbo.scaffold.domain.user.service.UserDomainService;
@@ -35,7 +35,7 @@ public class UserCommandService {
 
     private final UserRepository userRepository;
 
-    private final PasswordService passwordService;
+    private final PasswordGateway passwordGateway;
 
     /**
      * 创建用户
@@ -52,7 +52,7 @@ public class UserCommandService {
         userDomainService.validateCreate(user);
 
         // 设置默认密码
-        String encodePassword = passwordService.encode(UserConstants.USER_DEFAULT_PASSWORD);
+        String encodePassword = passwordGateway.encode(UserConstants.USER_DEFAULT_PASSWORD);
         user.setPassword(encodePassword);
 
         return userRepository.save(user);
@@ -87,7 +87,7 @@ public class UserCommandService {
         BizAssert.isTrue(existsUser, CommonResponseCode.NOT_FOUND, "用户不存在");
 
         // 默认密码
-        String changedPassword = passwordService.encode(UserConstants.USER_DEFAULT_PASSWORD);
+        String changedPassword = passwordGateway.encode(UserConstants.USER_DEFAULT_PASSWORD);
 
         userRepository.updatePasswordById(id, changedPassword);
     }
@@ -104,12 +104,12 @@ public class UserCommandService {
         UserEntity user = userRepository.findById(command.getId())
                 .orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "用户不存在"));
 
-        boolean isOldPasswordMatch = passwordService.matches(command.getOldPassword(), user.getPassword());
+        boolean isOldPasswordMatch = passwordGateway.matches(command.getOldPassword(), user.getPassword());
         BizAssert.isTrue(isOldPasswordMatch, CommonResponseCode.USER_ERROR, "原密码错误");
 
         userDomainService.validateChangePassword(command.getOldPassword(), command.getNewPassword(), command.getConfirmPassword());
 
-        String changedPassword = passwordService.encode(command.getNewPassword());
+        String changedPassword = passwordGateway.encode(command.getNewPassword());
 
         userRepository.updatePasswordById(command.getId(), changedPassword);
     }
