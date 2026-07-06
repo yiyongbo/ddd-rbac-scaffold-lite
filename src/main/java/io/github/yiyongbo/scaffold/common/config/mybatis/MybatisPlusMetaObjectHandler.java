@@ -1,6 +1,7 @@
 package io.github.yiyongbo.scaffold.common.config.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import io.github.yiyongbo.scaffold.common.security.SecurityUserHolder;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +22,23 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
         strictInsertFill(metaObject, "createdAt", LocalDateTime.class, now);
         strictInsertFill(metaObject, "updatedAt", LocalDateTime.class, now);
+
+        Long userId = SecurityUserHolder.getUserIdOrNull();
+        if (userId != null) {
+            strictInsertFill(metaObject, "createdBy", Long.class, userId);
+            strictInsertFill(metaObject, "updatedBy", Long.class, userId);
+        }
+
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         strictUpdateFill(metaObject, "updatedAt", LocalDateTime.class, LocalDateTime.now());
+
+        Long userId = SecurityUserHolder.getUserIdOrNull();
+        if (userId != null) {
+            strictInsertFill(metaObject, "updatedBy", Long.class, userId);
+        }
     }
 
 }

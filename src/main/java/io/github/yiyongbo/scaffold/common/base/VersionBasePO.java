@@ -1,6 +1,8 @@
 package io.github.yiyongbo.scaffold.common.base;
 
 import com.baomidou.mybatisplus.annotation.Version;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 带乐观锁的持久化对象基类
@@ -8,6 +10,8 @@ import com.baomidou.mybatisplus.annotation.Version;
  * @author kidd
  * @since 2026/5/29 17:42
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 public abstract class VersionBasePO extends BasePO {
 
     /**
