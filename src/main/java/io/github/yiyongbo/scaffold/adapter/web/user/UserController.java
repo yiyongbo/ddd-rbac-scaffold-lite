@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class UserController {
     private final UserCommandService userCommandService;
     private final UserQueryService userQueryService;
 
+    @PreAuthorize("hasAuthority('system:user:create')")
     @Operation(summary = "创建用户")
     @PostMapping
     public Result<Long> create(@Valid @RequestBody UserCreateRequest request) {
@@ -50,6 +52,7 @@ public class UserController {
         return Result.success(id);
     }
 
+    @PreAuthorize("hasAuthority('system:user:update')")
     @Operation(summary = "更新用户")
     @PutMapping("/{id}")
     public Result<Void> update(
@@ -61,6 +64,7 @@ public class UserController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:user:resetPassword')")
     @Operation(summary = "重置用户密码")
     @PutMapping("/{id}/password/reset")
     public Result<Void> resetPassword(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
@@ -68,6 +72,7 @@ public class UserController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:user:update')")
     @Operation(summary = "更新用户密码")
     @PutMapping("/{id}/password")
     public Result<Void> changePassword(
@@ -79,6 +84,7 @@ public class UserController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:user:update')")
     @Operation(summary = "切换用户启用状态")
     @PutMapping("/{id}/enabled/toggle")
     public Result<Void> toggleEnabled(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
@@ -86,6 +92,7 @@ public class UserController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:user:delete')")
     @Operation(summary = "删除用户")
     @DeleteMapping("/{id}")
     public Result<Void> delete(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
@@ -93,6 +100,7 @@ public class UserController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:user:list')")
     @Operation(summary = "获取用户详情")
     @GetMapping("/{id}")
     public Result<UserResponse> detail(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long id) {
@@ -100,6 +108,7 @@ public class UserController {
         return Result.success(userWebAssembler.toResponse(user));
     }
 
+    @PreAuthorize("hasAuthority('system:user:list')")
     @Operation(summary = "获取用户分页")
     @GetMapping("/page")
     public Result<PageResult<UserPageResponse>> page(@Valid UserPageRequest request) {
@@ -108,6 +117,7 @@ public class UserController {
         return Result.success(userWebAssembler.toPageResponse(page));
     }
 
+    @PreAuthorize("hasAuthority('system:user:list')")
     @Operation(summary = "查询用户角色 ID 列表")
     @GetMapping("/{userId}/roleIds")
     public Result<List<Long>> listRoleIds(@Parameter(description = "用户ID", required = true, example = "1") @PathVariable Long userId) {
@@ -115,6 +125,7 @@ public class UserController {
         return Result.success(roleIds);
     }
 
+    @PreAuthorize("hasAuthority('system:user:assign-role')")
     @Operation(summary = "分配用户角色")
     @PostMapping("/{userId}/roles")
     public Result<Void> assignRoles(

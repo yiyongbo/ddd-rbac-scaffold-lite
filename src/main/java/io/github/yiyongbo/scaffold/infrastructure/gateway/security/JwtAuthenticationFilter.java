@@ -39,6 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenGateway tokenGateway;
 
+    private final LoginUserLoader loginUserLoader;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
@@ -51,12 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             TokenPayloadValueObject payload = tokenGateway.parseAccessToken(token);
 
-            LoginUser loginUser = LoginUser.builder()
-                    .userId(payload.getUserId())
-                    .username(payload.getUsername())
-                    .build();
+            LoginUser loginUser = loginUserLoader.load(payload);
 
-            List<SimpleGrantedAuthority> authorities = loginUser.getPermissions().stream().map(SimpleGrantedAuthority::new).toList();
+            List<SimpleGrantedAuthority> authorities = loginUser.getPermissions().stream()
+                    .filter(StrUtil::isNotBlank)
+                    .distinct()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

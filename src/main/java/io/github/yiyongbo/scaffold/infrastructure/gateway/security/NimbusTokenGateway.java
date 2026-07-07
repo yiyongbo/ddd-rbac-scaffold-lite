@@ -9,6 +9,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import io.github.yiyongbo.scaffold.common.config.security.JwtProperties;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.exception.BizException;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;

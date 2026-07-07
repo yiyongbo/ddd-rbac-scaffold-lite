@@ -1,5 +1,8 @@
-package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
+package io.github.yiyongbo.scaffold.common.config.security;
 
+import io.github.yiyongbo.scaffold.infrastructure.gateway.security.JwtAuthenticationFilter;
+import io.github.yiyongbo.scaffold.infrastructure.gateway.security.RestAccessDeniedHandler;
+import io.github.yiyongbo.scaffold.infrastructure.gateway.security.RestAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

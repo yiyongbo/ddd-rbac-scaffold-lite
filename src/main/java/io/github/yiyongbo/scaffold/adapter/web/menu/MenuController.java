@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class MenuController {
 
     private final MenuQueryService menuQueryService;
 
+    @PreAuthorize("hasAuthority('system:menu:create')")
     @Operation(summary = "创建菜单")
     @PostMapping
     public Result<Long> create(@Valid @RequestBody MenuCreateRequest request) {
@@ -49,6 +51,7 @@ public class MenuController {
         return Result.success(id);
     }
 
+    @PreAuthorize("hasAuthority('system:menu:update')")
     @Operation(summary = "更新菜单")
     @PutMapping("/{id}")
     public Result<Void> update(
@@ -61,6 +64,7 @@ public class MenuController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:menu:update')")
     @Operation(summary = "切换菜单启用状态")
     @PutMapping("/{id}/enabled/toggle")
     public Result<Void> toggleEnabled(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
@@ -68,6 +72,7 @@ public class MenuController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:menu:delete')")
     @Operation(summary = "删除菜单")
     @DeleteMapping("/{id}")
     public Result<Void> delete(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
@@ -75,6 +80,7 @@ public class MenuController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @Operation(summary = "查询菜单详情")
     @GetMapping("/{id}")
     public Result<MenuResponse> detail(@Parameter(description = "菜单ID", required = true, example = "1") @PathVariable Long id) {
@@ -82,6 +88,7 @@ public class MenuController {
         return Result.success(menuWebAssembler.toResponse(menuDTO));
     }
 
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @Operation(summary = "查询菜单树")
     @GetMapping("/tree")
     public Result<List<MenuTreeResponse>> tree() {
