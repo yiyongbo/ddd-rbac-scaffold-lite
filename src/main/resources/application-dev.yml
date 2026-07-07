@@ -15,6 +15,18 @@ spring:
       auto-commit: true  # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
       connection-test-query: SELECT 1
       initialization-fail-timeout: 1
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:123456}
+      timeout: 3s
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 3s
 
 app:
   async:
