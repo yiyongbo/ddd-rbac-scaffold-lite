@@ -1,6 +1,6 @@
 package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
-import io.github.yiyongbo.scaffold.domain.common.gateway.PasswordGateway;
+import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

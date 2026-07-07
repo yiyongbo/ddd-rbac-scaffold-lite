@@ -6,7 +6,7 @@ import io.github.yiyongbo.scaffold.application.user.command.UserCreateCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
-import io.github.yiyongbo.scaffold.domain.common.gateway.PasswordGateway;
+import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordGateway;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import io.github.yiyongbo.scaffold.domain.user.constants.UserConstants;
 import io.github.yiyongbo.scaffold.domain.user.model.entity.UserEntity;

@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 public class RedisKeys {
 
     /**
-     * 登录 Token Key 前缀。
+     * 登录会话前缀
      */
-    public static final String LOGIN_TOKEN_PREFIX = "login:token:";
+    public static final String LOGIN_SESSION_PREFIX = "login:session:";
 
     /**
-     * 用户权限缓存 Key 前缀。
+     * 用户权限缓存 Key 前缀
      */
     public static final String USER_PERMISSION_PREFIX = "auth:permission:user:";
 
-    public static String loginTokenKey(String jti) {
-        return LOGIN_TOKEN_PREFIX + jti;
+    public static String loginSessionKey(String jti) {
+        return LOGIN_SESSION_PREFIX + jti;
     }
 
     public static String userPermissionKey(Long userId) {

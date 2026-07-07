@@ -14,7 +14,7 @@ import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.exception.BizException;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
-import io.github.yiyongbo.scaffold.domain.common.gateway.TokenGateway;
+import io.github.yiyongbo.scaffold.domain.auth.gateway.TokenGateway;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

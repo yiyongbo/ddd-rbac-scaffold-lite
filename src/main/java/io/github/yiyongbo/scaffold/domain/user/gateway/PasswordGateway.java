@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.domain.common.gateway;
+package io.github.yiyongbo.scaffold.domain.user.gateway;
 
 /**
  * 密码 Gateway

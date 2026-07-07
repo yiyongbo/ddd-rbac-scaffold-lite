@@ -24,6 +24,7 @@ public class LoginUserLoader {
         List<String> permissions = authPermissionMapper.selectPermissionCodesByUserId(tokenPayload.getUserId());
 
         return LoginUser.builder()
+                .jti(tokenPayload.getJti())
                 .userId(tokenPayload.getUserId())
                 .username(tokenPayload.getUsername())
                 .permissions(permissions)

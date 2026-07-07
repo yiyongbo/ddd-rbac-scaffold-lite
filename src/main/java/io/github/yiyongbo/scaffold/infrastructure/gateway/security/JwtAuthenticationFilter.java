@@ -6,7 +6,8 @@ import io.github.yiyongbo.scaffold.common.response.Result;
 import io.github.yiyongbo.scaffold.common.security.LoginUser;
 import io.github.yiyongbo.scaffold.common.util.JsonUtils;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
-import io.github.yiyongbo.scaffold.domain.common.gateway.TokenGateway;
+import io.github.yiyongbo.scaffold.domain.auth.gateway.TokenGateway;
+import io.github.yiyongbo.scaffold.infrastructure.cache.RedisLoginSessionCache;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final TokenGateway tokenGateway;
+    private final RedisLoginSessionCache loginSessionCache;
 
     private final LoginUserLoader loginUserLoader;
 
@@ -52,6 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             TokenPayloadValueObject payload = tokenGateway.parseAccessToken(token);
+
+            boolean sessionExists = loginSessionCache.exists(payload.getJti());
+            if (!sessionExists) {
+                writeUnauthorizedResponse(response);
+                return;
+            }
 
             LoginUser loginUser = loginUserLoader.load(payload);
 

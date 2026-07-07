@@ -1,4 +1,4 @@
-package io.github.yiyongbo.scaffold.domain.common.gateway;
+package io.github.yiyongbo.scaffold.domain.auth.gateway;
 
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
 
