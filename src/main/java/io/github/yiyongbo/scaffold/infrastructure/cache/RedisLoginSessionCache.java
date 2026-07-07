@@ -23,7 +23,12 @@ public class RedisLoginSessionCache implements LoginSessionCache {
 
     @Override
     public void save(LoginSessionValueObject session, Duration ttl) {
-        redisUtils.setObject(RedisKeys.loginSessionKey(session.getJti()), session, ttl);
+        String loginSessionKey = RedisKeys.loginSessionKey(session.getJti());
+        String loginUserSessionsKey = RedisKeys.loginUserSessionsKey(session.getUserId());
+
+        redisUtils.setObject(loginSessionKey, session, ttl);
+        redisUtils.setAdd(loginUserSessionsKey, session.getJti());
+        redisUtils.expire(loginUserSessionsKey, ttl);
     }
 
     @Override
@@ -47,7 +52,14 @@ public class RedisLoginSessionCache implements LoginSessionCache {
         if (StrUtil.isBlank(jti)) {
             return;
         }
+
+        LoginSessionValueObject loginSession = get(jti);
         redisUtils.delete(RedisKeys.loginSessionKey(jti));
+
+        if (loginSession != null && loginSession.getUserId() != null) {
+            String loginUserSessionsKey = RedisKeys.loginUserSessionsKey(loginSession.getUserId());
+            redisUtils.setRemove(loginUserSessionsKey, jti);
+        }
     }
 
     @Override

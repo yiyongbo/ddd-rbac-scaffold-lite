@@ -18,12 +18,22 @@ public class RedisKeys {
     public static final String LOGIN_SESSION_PREFIX = "login:session:";
 
     /**
+     * 用户登录会话前缀
+     */
+    private static final String LOGIN_USER_SESSIONS = "login:user:sessions:";
+
+    /**
      * 用户权限缓存 Key 前缀
      */
     public static final String USER_PERMISSION_PREFIX = "auth:permission:user:";
 
+
     public static String loginSessionKey(String jti) {
         return LOGIN_SESSION_PREFIX + jti;
+    }
+
+    public static String loginUserSessionsKey(Long userId) {
+        return LOGIN_USER_SESSIONS + userId;
     }
 
     public static String userPermissionKey(Long userId) {

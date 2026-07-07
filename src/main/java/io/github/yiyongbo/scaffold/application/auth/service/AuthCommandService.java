@@ -5,6 +5,8 @@ import io.github.yiyongbo.scaffold.application.auth.command.LoginCommand;
 import io.github.yiyongbo.scaffold.application.auth.dto.LoginResultDTO;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.common.security.LoginUser;
+import io.github.yiyongbo.scaffold.common.security.SecurityUserHolder;
 import io.github.yiyongbo.scaffold.domain.auth.cache.LoginSessionCache;
 import io.github.yiyongbo.scaffold.domain.auth.gateway.TokenGateway;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.LoginSessionValueObject;
@@ -75,4 +77,8 @@ public class AuthCommandService {
                 .build();
     }
 
+    public void logout() {
+        LoginUser loginUser = SecurityUserHolder.getLoginUser();
+        loginSessionCache.delete(loginUser.getJti());
+    }
 }

@@ -42,5 +42,10 @@ public class AuthController {
         return Result.success(authWebAssembler.toLoginResponse(dto));
     }
 
-
+    @Operation(summary = "退出登录")
+    @PostMapping("/logout")
+    public Result<Void> logout() {
+        authCommandService.logout();
+        return Result.success();
+    }
 }
