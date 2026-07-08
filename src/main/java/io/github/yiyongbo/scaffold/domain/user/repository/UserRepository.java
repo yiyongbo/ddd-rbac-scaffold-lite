@@ -121,4 +121,12 @@ public interface UserRepository {
      * @param enabled 启用状态
      */
     void updateEnabledById(Long id, Integer enabled);
+
+    /**
+     * 根据角色ID查询用户ID列表
+     *
+     * @param roleId 角色ID
+     * @return 用户ID列表
+     */
+    List<Long> listUserIdsByRoleId(Long roleId);
 }

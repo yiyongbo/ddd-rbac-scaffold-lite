@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,7 @@ public class RoleController {
 
     private final RoleWebAssembler roleWebAssembler;
 
+    @PreAuthorize("hasAuthority('system:role:create')")
     @Operation(summary = "创建角色")
     @PostMapping
     public Result<Long> create(@Valid @RequestBody RoleCreateRequest request) {
@@ -53,6 +55,7 @@ public class RoleController {
         return Result.success(id);
     }
 
+    @PreAuthorize("hasAuthority('system:role:update')")
     @Operation(summary = "更新角色")
     @PutMapping("/{id}")
     public Result<Void> update(
@@ -64,6 +67,7 @@ public class RoleController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:role:update')")
     @Operation(summary = "切换角色启用状态")
     @PutMapping("/{id}/toggleEnabled")
     public Result<Void> toggleEnabled(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
@@ -71,6 +75,7 @@ public class RoleController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:role:delete')")
     @Operation(summary = "删除角色")
     @DeleteMapping("/{id}")
     public Result<Void> delete(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
@@ -78,6 +83,7 @@ public class RoleController {
         return Result.success();
     }
 
+    @PreAuthorize("hasAuthority('system:role:list')")
     @Operation(summary = "获取角色详情")
     @GetMapping("/{id}")
     public Result<RoleResponse> detail(@Parameter(description = "角色ID", required = true, example = "1") @PathVariable Long id) {
@@ -85,6 +91,7 @@ public class RoleController {
         return Result.success(roleWebAssembler.toResponse(role));
     }
 
+    @PreAuthorize("hasAuthority('system:role:list')")
     @Operation(summary = "获取角色分页")
     @GetMapping("/page")
     public Result<PageResult<RolePageResponse>> page(@Valid RolePageRequest request) {
@@ -93,6 +100,7 @@ public class RoleController {
         return Result.success(roleWebAssembler.toPageResponse(page));
     }
 
+    @PreAuthorize("hasAuthority('system:role:list')")
     @Operation(summary = "查询角色已分配菜单ID列表")
     @GetMapping("/{roleId}/menus")
     public Result<List<Long>> listMenuIds(
@@ -103,6 +111,7 @@ public class RoleController {
         return Result.success(menuIds);
     }
 
+    @PreAuthorize("hasAuthority('system:role:assign-menu')")
     @Operation(summary = "分配角色菜单权限")
     @PostMapping("/{roleId}/menus")
     public Result<Void> assignMenus(

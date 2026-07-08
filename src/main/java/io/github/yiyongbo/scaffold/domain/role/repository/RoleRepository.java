@@ -114,4 +114,12 @@ public interface RoleRepository {
      * @param roleId 角色ID
      */
     void deleteRoleMenuByRoleId(Long roleId);
+
+    /**
+     * 根据菜单ID查询用户ID列表
+     *
+     * @param menuId 菜单ID
+     * @return 用户ID列表
+     */
+    List<Long> listUserIdsByMenuId(Long menuId);
 }

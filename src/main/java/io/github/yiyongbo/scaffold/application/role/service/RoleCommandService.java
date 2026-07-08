@@ -9,6 +9,7 @@ import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
 import io.github.yiyongbo.scaffold.domain.role.model.entity.RoleEntity;
 import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
+import io.github.yiyongbo.scaffold.domain.user.cache.UserPermissionCache;
 import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class RoleCommandService {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+
+    private final UserPermissionCache userPermissionCache;
 
     /**
      * 创建角色
@@ -81,6 +84,11 @@ public class RoleCommandService {
         role.toggleEnabled();
 
         roleRepository.updateEnabledById(id, role.getEnabled().getCode());
+
+        if (role.isDisabled()) {
+            List<Long> userIds = userRepository.listUserIdsByRoleId(role.getId());
+            userPermissionCache.deleteBatch(userIds);
+        }
     }
 
     /**
@@ -94,11 +102,15 @@ public class RoleCommandService {
 
         roleDomainService.validateDelete(id);
 
+        List<Long> userIds = userRepository.listUserIdsByRoleId(id);
+
         roleRepository.deleteById(id);
 
         roleRepository.deleteRoleMenuByRoleId(id);
 
         userRepository.deleteUserRoleByRoleId(id);
+
+        userPermissionCache.deleteBatch(userIds);
     }
 
     /**
@@ -117,6 +129,9 @@ public class RoleCommandService {
         menuDomainService.validateMenusExist(menuIds);
 
         roleRepository.replaceRoleMenus(roleId, menuIds);
+
+        List<Long> userIds = userRepository.listUserIdsByRoleId(roleId);
+        userPermissionCache.deleteBatch(userIds);
     }
 
 }

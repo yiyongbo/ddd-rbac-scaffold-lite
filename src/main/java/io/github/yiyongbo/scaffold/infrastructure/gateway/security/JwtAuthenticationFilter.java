@@ -1,0 +1,110 @@
+package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
+
+import cn.hutool.core.util.StrUtil;
+import io.github.yiyongbo.scaffold.common.config.security.AuthProperties;
+import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.common.response.Result;
+import io.github.yiyongbo.scaffold.common.security.LoginUser;
+import io.github.yiyongbo.scaffold.common.util.JsonUtils;
+import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
+import io.github.yiyongbo.scaffold.domain.auth.gateway.TokenGateway;
+import io.github.yiyongbo.scaffold.infrastructure.cache.RedisLoginSessionCache;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+/**
+ * JWT 认证过滤器
+ *
+ * @author kidd
+ * @since 2026/6/21 15:22
+ */
+@Component
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final AuthProperties authProperties;
+
+    private final TokenGateway tokenGateway;
+    private final RedisLoginSessionCache loginSessionCache;
+
+    private final LoginUserLoader loginUserLoader;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String token = resolveToken(request);
+
+        if (StrUtil.isBlank(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            TokenPayloadValueObject payload = tokenGateway.parseAccessToken(token);
+
+            boolean sessionExists = loginSessionCache.exists(payload.getJti());
+            if (!sessionExists) {
+                writeUnauthorizedResponse(response);
+                return;
+            }
+
+            loginSessionCache.refreshSessionExpire(payload.getJti(), authProperties.getLoginSessionTtl());
+
+            LoginUser loginUser = loginUserLoader.load(payload);
+
+            List<SimpleGrantedAuthority> authorities = loginUser.getPermissions().stream()
+                    .filter(StrUtil::isNotBlank)
+                    .distinct()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(loginUser, null, authorities);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            writeUnauthorizedResponse(response);
+        } finally {
+            SecurityContextHolder.clearContext();
+        }
+
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String authorization = request.getHeader(authProperties.getAuthorizationHeader());
+
+        if (StrUtil.isBlank(authorization)) {
+            return null;
+        }
+
+        String tokenPrefix = authProperties.getTokenPrefix() + " ";
+        if (!authorization.startsWith(tokenPrefix)) {
+            return null;
+        }
+
+        return authorization.substring(tokenPrefix.length());
+    }
+
+    private void writeUnauthorizedResponse(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        Result<Void> result = Result.fail(CommonResponseCode.UNAUTHORIZED);
+        response.getWriter().write(JsonUtils.toJsonString(result));
+    }
+}

@@ -37,9 +37,10 @@ public final class BizAssert {
         }
     }
 
-    public static void notBlank(String str, CommonResponseCode responseCode, String message) {
+    public static void isNotBlank(String str, CommonResponseCode responseCode, String message) {
         if (StrUtil.isBlank(str)) {
             throw new BizException(responseCode, message);
         }
     }
+
 }

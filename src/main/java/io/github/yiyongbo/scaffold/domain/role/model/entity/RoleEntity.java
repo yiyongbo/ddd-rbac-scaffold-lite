@@ -61,4 +61,12 @@ public class RoleEntity {
 
         this.enabled = YesNoEnum.YES.equals(this.enabled) ? YesNoEnum.NO : YesNoEnum.YES;
     }
+
+    public boolean isEnabled() {
+        return YesNoEnum.YES.equals(this.enabled);
+    }
+
+    public boolean isDisabled() {
+        return YesNoEnum.NO.equals(this.enabled);
+    }
 }

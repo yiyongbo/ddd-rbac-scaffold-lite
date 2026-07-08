@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @since 2026/6/9 13:58
  */
 @Data
-@Schema
+@Schema(description = "系统菜单响应")
 public class MenuResponse {
 
     @Schema(description = "菜单ID", example = "1")

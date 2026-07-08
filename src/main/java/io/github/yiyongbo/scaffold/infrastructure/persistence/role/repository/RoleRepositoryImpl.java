@@ -164,4 +164,9 @@ public class RoleRepositoryImpl implements RoleRepository {
                 Wrappers.lambdaQuery(RoleMenuPO.class).eq(RoleMenuPO::getRoleId, roleId)
         );
     }
+
+    @Override
+    public List<Long> listUserIdsByMenuId(Long menuId) {
+        return roleMapper.listUserIdsByMenuId(menuId);
+    }
 }

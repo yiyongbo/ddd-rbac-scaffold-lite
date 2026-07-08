@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Schema(description = "用户分页请求")
 public class UserPageRequest extends PageParam {
 
     @Size(max = 32, message = "用户名长度不能超过32")
