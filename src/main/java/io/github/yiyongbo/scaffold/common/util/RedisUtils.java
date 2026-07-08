@@ -235,6 +235,14 @@ public class RedisUtils {
         return list == null ? Collections.emptyList() : list;
     }
 
+    /**
+     * 获取 List。
+     *
+     * @param key          key
+     * @param elementClass 元素类型
+     * @param <T>          元素泛型
+     * @return list，value == null 时返回 null
+     */
     public <T> List<T> getList(String key, Class<T> elementClass) {
         String value = get(key);
         if (value == null) {

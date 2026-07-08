@@ -77,6 +77,6 @@ public class UserEntity {
     }
 
     public boolean isDisabled() {
-        return !isEnabled();
+        return YesNoEnum.NO.equals(this.enabled);
     }
 }

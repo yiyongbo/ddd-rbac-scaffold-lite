@@ -9,9 +9,13 @@ import io.github.yiyongbo.scaffold.domain.menu.model.entity.MenuEntity;
 import io.github.yiyongbo.scaffold.domain.menu.repository.MenuRepository;
 import io.github.yiyongbo.scaffold.domain.menu.service.MenuDomainService;
 import io.github.yiyongbo.scaffold.domain.role.repository.RoleRepository;
+import io.github.yiyongbo.scaffold.domain.user.cache.UserPermissionCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 系统菜单命令服务
@@ -29,6 +33,8 @@ public class MenuCommandService {
 
     private final MenuRepository menuRepository;
     private final RoleRepository roleRepository;
+
+    private final UserPermissionCache userPermissionCache;
 
 
     /**
@@ -56,12 +62,22 @@ public class MenuCommandService {
     @Transactional(rollbackFor = Exception.class)
     public void update(MenuUpdateCommand command) {
         BizAssert.notNull(command, CommonResponseCode.PARAM_ERROR, "更新菜单命令不能为空");
+        BizAssert.notNull(command.getId(), CommonResponseCode.PARAM_ERROR, "菜单ID不能为空");
+
+        MenuEntity oldMenu = menuRepository.findById(command.getId())
+                .orElseThrow(() -> BizAssert.newException(CommonResponseCode.NOT_FOUND, "菜单不存在"));
 
         MenuEntity menu = menuAppAssembler.toEntity(command);
 
         menuDomainService.validateUpdate(menu);
 
         menuRepository.update(menu);
+
+        if (!Objects.equals(oldMenu.getPermissionCode(), menu.getPermissionCode())) {
+            List<Long> userIds = roleRepository.listUserIdsByMenuId(oldMenu.getId());
+            userPermissionCache.deleteBatch(userIds);
+        }
+
     }
 
     /**
@@ -78,6 +94,11 @@ public class MenuCommandService {
         menu.toggleEnabled();
 
         menuRepository.updateEnabledById(id, menu.getEnabled().getCode());
+
+        if (menu.isDisabled()) {
+            List<Long> userIds = roleRepository.listUserIdsByMenuId(id);
+            userPermissionCache.deleteBatch(userIds);
+        }
     }
 
     /**
@@ -91,8 +112,12 @@ public class MenuCommandService {
 
         menuDomainService.validateDelete(id);
 
+        List<Long> userIds = roleRepository.listUserIdsByMenuId(id);
+
         menuRepository.delete(id);
 
         roleRepository.deleteRoleMenuByMenuId(id);
+
+        userPermissionCache.deleteBatch(userIds);
     }
 }

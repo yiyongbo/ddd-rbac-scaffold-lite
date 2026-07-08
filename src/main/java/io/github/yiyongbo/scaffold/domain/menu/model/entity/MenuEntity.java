@@ -131,4 +131,7 @@ public class MenuEntity {
         BizAssert.isNotBlank(permissionCode, CommonResponseCode.PARAM_ERROR, "按钮类型必须配置权限标识");
     }
 
+    public boolean isDisabled() {
+        return YesNoEnum.NO.equals(this.enabled);
+    }
 }

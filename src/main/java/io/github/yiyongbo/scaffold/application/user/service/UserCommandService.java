@@ -7,6 +7,7 @@ import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.domain.auth.cache.LoginSessionCache;
+import io.github.yiyongbo.scaffold.domain.user.cache.UserPermissionCache;
 import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordGateway;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import io.github.yiyongbo.scaffold.domain.user.constants.UserConstants;
@@ -38,6 +39,7 @@ public class UserCommandService {
 
     private final PasswordGateway passwordGateway;
     private final LoginSessionCache loginSessionCache;
+    private final UserPermissionCache userPermissionCache;
 
     /**
      * 创建用户
@@ -178,6 +180,8 @@ public class UserCommandService {
         roleDomainService.validateRoles(roleIds);
 
         userRepository.replaceUserRoles(userId, roleIds);
+
+        userPermissionCache.delete(userId);
     }
 
 }

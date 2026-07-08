@@ -162,4 +162,13 @@ public class UserRepositoryImpl implements UserRepository {
                 Wrappers.lambdaUpdate(UserPO.class).set(UserPO::getEnabled, enabled).eq(UserPO::getId, id)
         );
     }
+
+    @Override
+    public List<Long> listUserIdsByRoleId(Long roleId) {
+        List<UserRolePO> userRoles = userRoleMapper.selectList(
+                Wrappers.lambdaQuery(UserRolePO.class).eq(UserRolePO::getRoleId, roleId)
+        );
+
+        return userRoles.stream().map(UserRolePO::getUserId).toList();
+    }
 }
