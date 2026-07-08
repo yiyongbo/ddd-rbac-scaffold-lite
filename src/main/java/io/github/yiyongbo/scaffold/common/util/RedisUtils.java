@@ -234,4 +234,13 @@ public class RedisUtils {
         List<String> list = stringRedisTemplate.opsForList().range(key, 0, -1);
         return list == null ? Collections.emptyList() : list;
     }
+
+    public <T> List<T> getList(String key, Class<T> elementClass) {
+        String value = get(key);
+        if (value == null) {
+            return null;
+        }
+        return JsonUtils.parseList(value, elementClass);
+    }
+
 }

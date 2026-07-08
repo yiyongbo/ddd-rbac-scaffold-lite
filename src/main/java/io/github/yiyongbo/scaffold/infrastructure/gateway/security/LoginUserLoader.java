@@ -2,10 +2,12 @@ package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
 import io.github.yiyongbo.scaffold.common.security.LoginUser;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.TokenPayloadValueObject;
+import io.github.yiyongbo.scaffold.infrastructure.cache.RedisUserPermissionCache;
 import io.github.yiyongbo.scaffold.infrastructure.persistence.menu.mapper.AuthPermissionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -19,15 +21,21 @@ import java.util.List;
 public class LoginUserLoader {
 
     private final AuthPermissionMapper authPermissionMapper;
+    private final RedisUserPermissionCache userPermissionCache;
 
     public LoginUser load(TokenPayloadValueObject tokenPayload) {
-        List<String> permissions = authPermissionMapper.selectPermissionCodesByUserId(tokenPayload.getUserId());
+        List<String> userPermissions = userPermissionCache.get(tokenPayload.getUserId());
+
+        if (userPermissions == null) {
+            userPermissions = authPermissionMapper.selectPermissionCodesByUserId(tokenPayload.getUserId());
+            userPermissionCache.save(tokenPayload.getUserId(), userPermissions, Duration.ofDays(1));
+        }
 
         return LoginUser.builder()
                 .jti(tokenPayload.getJti())
                 .userId(tokenPayload.getUserId())
                 .username(tokenPayload.getUsername())
-                .permissions(permissions)
+                .permissions(userPermissions)
                 .build();
     }
 }
