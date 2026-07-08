@@ -44,6 +44,13 @@ public interface LoginSessionCache {
     void delete(String jti);
 
     /**
+     * 根据用户ID删除登录会话
+     *
+     * @param userId 用户ID
+     */
+    void deleteByUserId(Long userId);
+
+    /**
      * 刷新登录会话有效期
      *
      * @param jti jti

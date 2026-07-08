@@ -75,4 +75,8 @@ public class UserEntity {
     public boolean isEnabled() {
         return YesNoEnum.YES.equals(this.enabled);
     }
+
+    public boolean isDisabled() {
+        return !isEnabled();
+    }
 }

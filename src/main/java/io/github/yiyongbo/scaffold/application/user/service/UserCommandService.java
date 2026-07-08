@@ -6,6 +6,7 @@ import io.github.yiyongbo.scaffold.application.user.command.UserCreateCommand;
 import io.github.yiyongbo.scaffold.application.user.command.UserUpdateCommand;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
+import io.github.yiyongbo.scaffold.domain.auth.cache.LoginSessionCache;
 import io.github.yiyongbo.scaffold.domain.user.gateway.PasswordGateway;
 import io.github.yiyongbo.scaffold.domain.role.service.RoleDomainService;
 import io.github.yiyongbo.scaffold.domain.user.constants.UserConstants;
@@ -36,6 +37,7 @@ public class UserCommandService {
     private final UserRepository userRepository;
 
     private final PasswordGateway passwordGateway;
+    private final LoginSessionCache loginSessionCache;
 
     /**
      * 创建用户
@@ -88,8 +90,10 @@ public class UserCommandService {
 
         // 默认密码
         String changedPassword = passwordGateway.encode(UserConstants.USER_DEFAULT_PASSWORD);
-
         userRepository.updatePasswordById(id, changedPassword);
+
+        // 删除用户登录会话
+        loginSessionCache.deleteByUserId(id);
     }
 
     /**
@@ -112,6 +116,9 @@ public class UserCommandService {
         String changedPassword = passwordGateway.encode(command.getNewPassword());
 
         userRepository.updatePasswordById(command.getId(), changedPassword);
+
+        // 删除用户登录会话
+        loginSessionCache.deleteByUserId(user.getId());
     }
 
     /**
@@ -129,6 +136,11 @@ public class UserCommandService {
         user.toggleEnabled();
 
         userRepository.updateEnabledById(id, user.getEnabled().getCode());
+
+        if (user.isDisabled()) {
+            // 删除用户登录会话
+            loginSessionCache.deleteByUserId(user.getId());
+        }
     }
 
     /**
@@ -145,6 +157,9 @@ public class UserCommandService {
         userRepository.deleteById(id);
 
         userRepository.deleteUserRoleByUserId(id);
+
+        // 删除用户登录会话
+        loginSessionCache.deleteByUserId(id);
     }
 
     /**

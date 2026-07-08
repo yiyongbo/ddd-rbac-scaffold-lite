@@ -63,6 +63,15 @@ public class RedisLoginSessionCache implements LoginSessionCache {
     }
 
     @Override
+    public void deleteByUserId(Long userId) {
+        if (userId == null) {
+            return;
+        }
+        String loginUserSessionsKey = RedisKeys.loginUserSessionsKey(userId);
+        redisUtils.delete(loginUserSessionsKey);
+    }
+
+    @Override
     public void refreshExpire(String jti, Duration ttl) {
         if (StrUtil.isBlank(jti)) {
             return;
