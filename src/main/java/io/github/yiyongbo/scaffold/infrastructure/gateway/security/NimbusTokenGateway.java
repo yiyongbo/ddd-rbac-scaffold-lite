@@ -89,11 +89,6 @@ public class NimbusTokenGateway implements TokenGateway {
         }
     }
 
-    @Override
-    public Long getAccessTokenExpiresIn() {
-        return jwtProperties.getAccessTokenExpireSeconds();
-    }
-
     private void validatePayload(TokenPayloadValueObject payload) {
         BizAssert.notNull(payload, CommonResponseCode.INTERNAL_ERROR, "Token载荷不能为空");
         BizAssert.notNull(payload.getUserId(), CommonResponseCode.INTERNAL_ERROR, "Token用户ID不能为空");

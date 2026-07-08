@@ -1,6 +1,7 @@
 package io.github.yiyongbo.scaffold.infrastructure.gateway.security;
 
 import cn.hutool.core.util.StrUtil;
+import io.github.yiyongbo.scaffold.common.config.security.AuthProperties;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.response.Result;
 import io.github.yiyongbo.scaffold.common.security.LoginUser;
@@ -34,9 +35,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
-    private static final String BEARER_PREFIX = "Bearer ";
+    private final AuthProperties authProperties;
 
     private final TokenGateway tokenGateway;
     private final RedisLoginSessionCache loginSessionCache;
@@ -61,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            loginSessionCache.refreshSessionExpire(payload.getJti(), authProperties.getLoginSessionTtl());
+
             LoginUser loginUser = loginUserLoader.load(payload);
 
             List<SimpleGrantedAuthority> authorities = loginUser.getPermissions().stream()
@@ -84,17 +85,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        String authorization = request.getHeader(authProperties.getAuthorizationHeader());
 
         if (StrUtil.isBlank(authorization)) {
             return null;
         }
 
-        if (!authorization.startsWith(BEARER_PREFIX)) {
+        String tokenPrefix = authProperties.getTokenPrefix() + " ";
+        if (!authorization.startsWith(tokenPrefix)) {
             return null;
         }
 
-        return authorization.substring(BEARER_PREFIX.length());
+        return authorization.substring(tokenPrefix.length());
     }
 
     private void writeUnauthorizedResponse(HttpServletResponse response) throws IOException {

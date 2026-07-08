@@ -23,9 +23,9 @@ public class LoginResultDTO {
     private String accessToken;
 
     /**
-     * 令牌类型
+     * 令牌前缀
      */
-    private String tokenType;
+    private String tokenPrefix;
 
     /**
      * 过期时间，单位秒

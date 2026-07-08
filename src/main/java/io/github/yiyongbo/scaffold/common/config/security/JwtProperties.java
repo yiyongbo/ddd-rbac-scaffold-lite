@@ -26,5 +26,5 @@ public class JwtProperties {
     /**
      * 访问令牌过期时间（秒）
      */
-    private Long accessTokenExpireSeconds = 7200L;
+    private Long accessTokenExpireSeconds = 604800L;
 }

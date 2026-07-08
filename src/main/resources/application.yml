@@ -32,7 +32,15 @@ security:
   jwt:
     issuer: ddd-rbac-scaffold-lite
     secret: ${JWT_SECRET:please-change-this-secret-key}
-    access-token-expire-seconds: 7200
+    # 访问令牌过期时间（秒）: 7 天
+    access-token-expire-seconds: 604800
+
+auth:
+  authorization-header: Authorization
+  token-prefix: Bearer
+  login-session-ttl: 2h
+  login-user-session-index-ttl: 7d
+  user-permission-cache-ttl: 30m
 
 logging:
   file:

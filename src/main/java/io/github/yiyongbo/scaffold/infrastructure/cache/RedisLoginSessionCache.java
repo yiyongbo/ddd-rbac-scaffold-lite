@@ -1,6 +1,7 @@
 package io.github.yiyongbo.scaffold.infrastructure.cache;
 
 import cn.hutool.core.util.StrUtil;
+import io.github.yiyongbo.scaffold.common.config.security.AuthProperties;
 import io.github.yiyongbo.scaffold.common.util.RedisUtils;
 import io.github.yiyongbo.scaffold.domain.auth.cache.LoginSessionCache;
 import io.github.yiyongbo.scaffold.domain.auth.model.valueobject.LoginSessionValueObject;
@@ -21,6 +22,8 @@ public class RedisLoginSessionCache implements LoginSessionCache {
 
     private final RedisUtils redisUtils;
 
+    private final AuthProperties authProperties;
+
     @Override
     public void save(LoginSessionValueObject session, Duration ttl) {
         String loginSessionKey = RedisKeys.loginSessionKey(session.getJti());
@@ -28,7 +31,7 @@ public class RedisLoginSessionCache implements LoginSessionCache {
 
         redisUtils.setObject(loginSessionKey, session, ttl);
         redisUtils.setAdd(loginUserSessionsKey, session.getJti());
-        redisUtils.expire(loginUserSessionsKey, ttl);
+        redisUtils.expire(loginUserSessionsKey, authProperties.getLoginUserSessionIndexTtl());
     }
 
     @Override
@@ -72,7 +75,7 @@ public class RedisLoginSessionCache implements LoginSessionCache {
     }
 
     @Override
-    public void refreshExpire(String jti, Duration ttl) {
+    public void refreshSessionExpire(String jti, Duration ttl) {
         if (StrUtil.isBlank(jti)) {
             return;
         }

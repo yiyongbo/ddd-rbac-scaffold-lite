@@ -3,6 +3,7 @@ package io.github.yiyongbo.scaffold.application.auth.service;
 import cn.hutool.core.util.IdUtil;
 import io.github.yiyongbo.scaffold.application.auth.command.LoginCommand;
 import io.github.yiyongbo.scaffold.application.auth.dto.LoginResultDTO;
+import io.github.yiyongbo.scaffold.common.config.security.AuthProperties;
 import io.github.yiyongbo.scaffold.common.exception.BizAssert;
 import io.github.yiyongbo.scaffold.common.response.CommonResponseCode;
 import io.github.yiyongbo.scaffold.common.security.LoginUser;
@@ -17,7 +18,6 @@ import io.github.yiyongbo.scaffold.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
@@ -30,9 +30,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthCommandService {
 
-    private static final String TOKEN_TYPE = "Bearer";
-
     private final UserRepository userRepository;
+
+    private final AuthProperties authProperties;
 
     private final PasswordGateway passwordGateway;
     private final TokenGateway tokenGateway;
@@ -67,13 +67,12 @@ public class AuthCommandService {
                 .username(user.getUsername())
                 .loginTime(LocalDateTime.now())
                 .build();
-        Long accessTokenExpiresIn = tokenGateway.getAccessTokenExpiresIn();
-        loginSessionCache.save(loginSession, Duration.ofSeconds(accessTokenExpiresIn));
+        loginSessionCache.save(loginSession, authProperties.getLoginSessionTtl());
 
         return LoginResultDTO.builder()
                 .accessToken(accessToken)
-                .tokenType(TOKEN_TYPE)
-                .expiresIn(accessTokenExpiresIn)
+                .tokenPrefix(authProperties.getTokenPrefix())
+                .expiresIn(authProperties.getLoginSessionTtl().getSeconds())
                 .build();
     }
 

@@ -16,8 +16,8 @@ public class LoginResponse {
     @Schema(description = "访问令牌")
     private String accessToken;
 
-    @Schema(description = "令牌类型", example = "Bearer")
-    private String tokenType;
+    @Schema(description = "令牌前缀", example = "Bearer")
+    private String tokenPrefix;
 
     @Schema(description = "过期时间，单位秒", example = "7200")
     private Long expiresIn;

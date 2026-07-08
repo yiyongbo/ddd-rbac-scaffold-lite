@@ -26,11 +26,4 @@ public interface TokenGateway {
      */
     TokenPayloadValueObject parseAccessToken(String accessToken);
 
-    /**
-     * 获取访问令牌过期时间
-     *
-     * @return 过期时间（秒）
-     */
-    Long getAccessTokenExpiresIn();
-
 }

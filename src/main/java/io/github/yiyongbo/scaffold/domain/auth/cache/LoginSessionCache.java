@@ -56,5 +56,5 @@ public interface LoginSessionCache {
      * @param jti jti
      * @param ttl 有效期
      */
-    void refreshExpire(String jti, Duration ttl);
+    void refreshSessionExpire(String jti, Duration ttl);
 }
