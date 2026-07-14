@@ -29,7 +29,6 @@ public class MenuCommandServiceTest {
         createCmd.setPermissionCode("system:test:" + System.currentTimeMillis());
         createCmd.setIcon("setting");
         createCmd.setSort(1);
-        createCmd.setVisible(1);
         createCmd.setEnabled(1);
         createCmd.setRemark("系统管理目录");
 
@@ -45,7 +44,6 @@ public class MenuCommandServiceTest {
         updateCmd.setPermissionCode(createCmd.getPermissionCode());
         updateCmd.setIcon("setting");
         updateCmd.setSort(2);
-        updateCmd.setVisible(1);
         updateCmd.setEnabled(1);
         updateCmd.setRemark("系统管理目录-修改");
 

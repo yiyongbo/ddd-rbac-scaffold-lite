@@ -33,7 +33,7 @@ public class MenuRepositoryTest {
         menu.setPermissionCode("system");
         menu.setIcon("setting");
         menu.setSort(1);
-        menu.setVisible(YesNoEnum.YES);
+        menu.setEnabled(YesNoEnum.YES);
         menu.setEnabled(YesNoEnum.YES);
         menu.setRemark("系统管理目录");
 
