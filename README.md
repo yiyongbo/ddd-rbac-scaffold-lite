@@ -1,167 +1,76 @@
-# scaffold-server-light
+# ddd-rbac-scaffold-lite
 
-> 面向中小团队的轻量 DDD / COLA 5 Light 风格 RBAC 后台脚手架。  
-> 以 RBAC 权限系统为业务载体，沉淀一套清晰、可学习、可复用、可扩展的 Spring Boot 企业级工程模板。
+> 基于 Spring Boot、DDD 四层架构、轻量 CQRS 与 RBAC 的后台管理系统后端脚手架。
 
-## 项目简介
+`ddd-rbac-scaffold-lite` 面向希望在单体 Java 项目中实践清晰分层的开发者和中小团队。它以用户、角色、菜单权限为业务载体，提供一个可运行、可阅读、可继续扩展的 Spring Boot 工程起点。
 
-`scaffold-server-light` 是一个基于 **Java 17 + Spring Boot 3** 的后台管理 RBAC 脚手架项目。
+项目采用 COLA 5 Light 风格的单体包结构：不引入复杂的多模块或微服务治理组件，但通过领域层接口与基础设施实现隔离业务规则和技术细节。它适合学习和项目初始化，不试图成为功能完备的中台。
 
-它不是单纯的 CRUD 后台模板，也不是重型微服务平台，而是希望解决一个更具体的问题：
+## 核心能力
 
-> Java 后端团队如何在单体项目中，以较低成本落地 DDD、COLA 5 Light、轻量 CQRS 和端口适配器思想？
+- DDD 四层：`adapter`、`application`、`domain`、`infrastructure` 与 `common` 分层。
+- 轻量 CQRS：写操作由 Command 和应用服务编排，查询由 Query Service 处理。
+- RBAC 基础功能：用户、角色、菜单的管理，以及用户角色、角色菜单关系分配。
+- 认证与授权：用户名密码登录、JWT、Redis 登录会话、Spring Security 权限校验。
+- 工程通用能力：统一响应与异常、参数校验、分页、MyBatis-Plus、MapStruct、TraceId、线程池和 OpenAPI。
 
-项目当前处于早期阶段，已完成基础工程分层模板设计，后续会逐步完善登录认证、用户管理、角色管理、菜单权限、操作日志等 RBAC 核心能力。
+## 当前完成度
 
-## 项目特点
-
-- **轻量 DDD 落地**：用领域模型、领域服务、仓储接口和外部能力接口组织核心业务。
-- **COLA 5 Light 风格**：采用单体 package 分层，避免一开始就引入过重的多模块结构。
-- **轻量 CQRS**：写操作走 Command + ApplicationService + Domain，查询操作走 Query + QueryService。
-- **端口与适配器思想**：通过 Repository、Gateway、ACL 隔离数据库、缓存、消息队列和第三方系统。
-- **RBAC 业务示例**：以后台权限系统为载体，逐步演示 DDD 工程结构如何在真实业务中落地。
-- **适合中小团队**：不追求复杂架构堆叠，优先保证结构清晰、职责明确、易于维护和扩展。
+| 模块 | 状态 | 说明 |
+|---|---|---|
+| 工程分层与对象转换 | 已完成 | 提供 DDD 四层及各业务上下文的示例组织方式 |
+| 用户、角色、菜单管理 | 已完成 | 包含 CRUD、分页、状态切换和关系分配接口 |
+| 登录、退出与接口鉴权 | 已完成 | 使用 JWT 与 Redis 登录会话 |
+| 初始化演示数据 | 未提供 | 初始化 SQL 当前只创建表结构，不包含默认管理员 |
+| 操作日志、登录日志 | 规划中 | 尚未实现 |
+| 前端管理端 | 规划中 | 本仓库仅包含后端 |
+| Docker Compose | 已完成 | 一条命令启动应用、MySQL 和 Redis |
 
 ## 技术栈
 
-- Java 17
-- Spring Boot 3.x
-- Spring Security + JWT
-- MySQL + MyBatis-Plus
-- Redis
-- Springdoc OpenAPI
-- Docker / Docker Compose
+| 分类 | 技术 | 用途 |
+|---|---|---|
+| 语言与框架 | Java 17、Spring Boot 3.5.14 | 应用运行与 Web 能力 |
+| 安全 | Spring Security、Nimbus JOSE + JWT | 认证与授权 |
+| 数据 | MySQL、MyBatis-Plus 3.5.15 | 数据持久化 |
+| 缓存 | Redis | 登录会话与权限缓存 |
+| 接口文档 | Springdoc OpenAPI 2.8.17 | API 文档 |
+| 开发工具 | Maven、Lombok、MapStruct 1.6.3、Hutool | 构建与开发辅助 |
 
 ## 架构概览
 
-项目采用：
-
 ```text
-COLA 5 Light + DDD 四层思想 + 六边形端口适配器思想 + 轻量 CQRS
+Adapter（HTTP、Job、消息等入口）
+    ↓
+Application（用例编排、Command / Query）
+    ↓
+Domain（业务模型、规则、Repository / Gateway 抽象）
+    ↑
+Infrastructure（数据库、缓存和外部能力的实现）
 ```
 
-核心 package 结构：
+`domain` 不依赖 `infrastructure`；基础设施层负责实现领域层定义的接口。详见 [Project Structure](docs/project-structure.md)。
 
-```text
-src/main/java/cn/seepeak/scaffold
-├── adapter          # 外部入口适配层：Web、Job、Consumer、Callback
-├── application      # 应用层：用例编排、事务控制、Command / Query / DTO
-├── domain           # 领域层：聚合、实体、值对象、领域服务、仓储接口、外部能力接口、领域事件
-├── infrastructure   # 基础设施层：数据库、缓存、MQ、第三方系统、防腐层实现
-├── common           # 通用基础层：响应、异常、分页、常量、工具类
-└── Application.java # 启动类
-```
+## 快速开始
 
-### 分层职责
+1. 安装 Docker 与 Docker Compose；
+2. 执行 `cp .env.example .env`，并替换 `.env` 中的密码与 JWT 密钥；
+3. 执行 `docker compose up --build -d`；
+4. 访问 `http://localhost:8080/swagger-ui.html` 查看 API 文档。
 
-| 分层 | 职责 |
-|---|---|
-| `adapter` | 处理外部入口，例如 HTTP Controller、消息消费、定时任务、第三方回调 |
-| `application` | 编排业务用例、控制事务、处理 Command / Query、返回 DTO |
-| `domain` | 承载核心业务规则、领域模型、领域服务、Repository 接口、Gateway 接口和领域事件 |
-| `infrastructure` | 实现数据库、缓存、消息队列、第三方系统访问、防腐层等技术细节 |
-| `common` | 提供跨层通用能力，不包含具体业务语义 |
-
-### 典型调用链
-
-写操作：
-
-```text
-adapter.web.Controller
-  -> application.XxxCommandService
-  -> domain.model / domain.service
-  -> domain.repository / domain.gateway
-  -> infrastructure.persistence / cache / gateway / acl
-```
-
-查询操作：
-
-```text
-adapter.web.Controller
-  -> application.XxxQueryService
-  -> infrastructure.persistence.mapper
-  -> application.dto
-```
-
-## 当前状态
-
-当前项目处于早期迭代阶段。
-
-已完成：
-
-- 工程 package 分层设计；
-- `adapter / application / domain / infrastructure / common` 基础结构；
-- 完整模板结构 `template-full`；
-- 关键 package 的职责说明；
-- DDD / COLA 5 Light 风格的基础工程约束。
-
-后续将逐步完善：
-
-- 基础通用能力；
-- 用户、角色、菜单、权限管理；
-- Spring Security + JWT 登录认证；
-- 操作日志、登录日志；
-- Docker Compose 与初始化 SQL；
-- 项目文档和开发指南。
-
-## 模板说明
-
-当前模板为完整结构版本：
-
-```text
-template-full
-```
-
-包含：
-
-- `adapter.web` 下的 `request / response / assembler`
-- `application` 下的 `command / query / dto / service / assembler`
-- `domain` 下的 `model / service / repository / gateway / event`
-- `infrastructure` 下的 `persistence / cache / gateway / mq / acl`
-
-后续可根据项目复杂度裁剪出轻量模板：
-
-```text
-template-light
-```
-
-轻量模板可让 `adapter` 直接使用 `application` 中的 `Command / Query / DTO`，减少样板代码。
+完整命令、配置说明和已知限制见 [Quick Start](docs/quick-start.md)。
 
 ## 文档
 
-后续将补充以下文档：
-
-- `docs/architecture.md`：架构设计说明
-- `docs/package-convention.md`：包结构与编码规范
-- `docs/rbac-design.md`：RBAC 领域设计
-- `docs/development-guide.md`：功能开发指南
+| 文档 | 说明 |
+|---|---|
+| [Quick Start](docs/quick-start.md) | 本地环境配置、启动与基础验证 |
+| [Project Structure](docs/project-structure.md) | DDD 四层职责、依赖方向和新增模块位置 |
 
 ## 参与贡献
 
-当前项目处于早期阶段，欢迎提出建议、Issue 或 Pull Request。
+欢迎提交 Issue、改进建议或 Pull Request。提交前请至少确保项目可编译，并运行与改动相关的测试。
 
-参与方式：
+## License
 
-1. Fork 本仓库；
-2. 创建功能分支；
-3. 提交代码或文档；
-4. 创建 Pull Request；
-5. 等待 Review。
-
-## 项目愿景
-
-本项目希望沉淀一套：
-
-```text
-能学习、能运行、能扩展、能在中小团队落地的轻量 DDD RBAC 后台脚手架。
-```
-
-它不是为了追求复杂架构，而是为了让：
-
-- 外部入口归 adapter；
-- 用例编排归 application；
-- 业务规则归 domain；
-- 技术实现归 infrastructure；
-- 通用能力归 common。
-
-如果你也在寻找适合国内 Java 团队的 DDD 工程落地方式，欢迎一起交流和完善。
+本项目使用 [Apache License 2.0](LICENSE)。

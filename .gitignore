@@ -5,6 +5,7 @@ target/
 .kotlin
 /logs
 application-local.yml
+.env
 
 ### IntelliJ IDEA ###
 .idea/
