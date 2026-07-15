@@ -6,6 +6,7 @@ target/
 /logs
 application-local.yml
 .env
+docs/app/app.jar
 
 ### IntelliJ IDEA ###
 .idea/

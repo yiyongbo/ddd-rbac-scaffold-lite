@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ddd-rbac-scaffold-lite:local
+    container_name: ddd-rbac-app
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    networks:
+      - ddd-rbac-network
+
+networks:
+  ddd-rbac-network:
+    external: true
+    name: ddd-rbac-network
