@@ -24,7 +24,7 @@
 | 初始化演示数据 | 未提供 | 初始化 SQL 当前只创建表结构，不包含默认管理员 |
 | 操作日志、登录日志 | 规划中 | 尚未实现 |
 | 前端管理端 | 规划中 | 本仓库仅包含后端 |
-| Docker Compose | 已完成 | 一条命令启动应用、MySQL 和 Redis |
+| Docker Compose | 已提供 | 提供 MySQL、Redis 基础环境和应用容器部署模板 |
 
 ## 技术栈
 
@@ -54,11 +54,12 @@ Infrastructure（数据库、缓存和外部能力的实现）
 ## 快速开始
 
 1. 安装 Docker 与 Docker Compose；
-2. 执行 `cp .env.example .env`，并替换 `.env` 中的密码与 JWT 密钥；
-3. 执行 `docker compose up --build -d`；
-4. 访问 `http://localhost:8080/swagger-ui.html` 查看 API 文档。
+2. 进入 `docs/environment`，执行 `cp .env.example .env`，并替换 `.env` 中的密码；
+3. 执行 `docker compose -f docker-compose-environment.yml up -d` 启动 MySQL 与 Redis；
+4. 按实际环境配置 `dev` profile 所需的数据库、Redis 和 JWT 参数，并启动 Spring Boot；
+5. 访问 `http://localhost:8080/swagger-ui.html` 查看 API 文档。
 
-完整命令、配置说明和已知限制见 [Quick Start](docs/quick-start.md)。
+完整命令及应用容器部署模板说明见 [Quick Start](docs/quick-start.md)。
 
 ## 文档
 
@@ -66,6 +67,7 @@ Infrastructure（数据库、缓存和外部能力的实现）
 |---|---|
 | [Quick Start](docs/quick-start.md) | 本地环境配置、启动与基础验证 |
 | [Project Structure](docs/project-structure.md) | DDD 四层职责、依赖方向和新增模块位置 |
+| [Security Policy](SECURITY.md) | 安全漏洞报告方式和支持范围 |
 
 ## 参与贡献
 

@@ -55,7 +55,7 @@ domain/tenant
 infrastructure/persistence/tenant
 ```
 
-`demo` 包保留完整目录形态，仅作为结构参考；新业务应使用真实的业务上下文名称，而不是继续扩展 `demo`。
+各层 `demo/package-info.java` 用于说明推荐的目录职责；新业务应使用真实的业务上下文名称，而不是继续扩展 `demo`。
 
 ## Command 与 Query
 
@@ -83,15 +83,16 @@ HTTP Request
 ```text
 HTTP Request
   → XxxWebAssembler
-  → XxxQuery
+  → XxxQuery（复杂查询）或 ID 等简单参数
   → XxxQueryService
-  → 持久化查询
+  → XxxRepository（领域接口）
+  → 持久化实现
   → XxxDTO
   → XxxWebAssembler
   → HTTP Response
 ```
 
-查询服务返回应用层 DTO。当前项目的查询实现可通过持久化组件读取数据；不要让 PO 或 Mapper 类型越过 application/adapter 边界。
+查询服务返回应用层 DTO。分页等包含多个条件的查询使用 `XxxQuery`，详情、树等简单查询可直接使用 ID 或无参数调用。不要让 PO 或 Mapper 类型越过 application/adapter 边界。
 
 ## 对象职责
 
@@ -100,7 +101,7 @@ HTTP Request
 | `XxxRequest` | `adapter.web.<context>.request` | HTTP 入参，包含协议和参数校验语义 |
 | `XxxResponse` | `adapter.web.<context>.response` | HTTP 出参 |
 | `XxxCommand` | `application.<context>.command` | 写操作用例输入 |
-| `XxxQuery` | `application.<context>.query` | 查询用例输入 |
+| `XxxQuery` | `application.<context>.query` | 复杂查询用例输入，简单查询可不单独定义 |
 | `XxxDTO` | `application.<context>.dto` | 应用层对外的数据结果 |
 | 领域实体/值对象 | `domain.<context>.model` | 表达业务状态、行为与不变量 |
 | `XxxPO` | `infrastructure.persistence.<context>.po` | 数据库持久化对象 |
@@ -115,7 +116,7 @@ HTTP Request
 
 - `Repository`：以领域对象为中心的持久化抽象，例如 `UserRepository`；实现在 `infrastructure.persistence`。
 - `Gateway`：领域所需的外部能力抽象，例如密码编码、Token 签发；实现在 `infrastructure.gateway`。
-- `ACL`：面向复杂外部业务系统的防腐层；当前目录已预留，尚无具体外部系统实现。
+- `ACL`：面向复杂外部业务系统的防腐层；需要接入此类系统时放在 `infrastructure.acl`。
 
 缓存属于基础设施能力：领域层可定义缓存抽象，Redis 实现位于 `infrastructure.cache`。不要在领域或应用服务中直接依赖 `RedisTemplate`。
 
